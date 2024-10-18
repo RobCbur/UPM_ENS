@@ -30,15 +30,17 @@ START:
 
 addu r30, r0,0x2710
 
+PUSH(r10)
+
 LEA(r10,PALABRA)
 
 PUSH(r10)
 
-PUSH(r1)
+LongCad:PUSH(r1)
 
 PUSH(r31)
 
-and r10 , r10 , 0
+
 
 or r31, r30 ,0
 
@@ -63,3 +65,8 @@ addu r3,r3,1
 ld.bu r12,r11,0
 cmp r4 , r12 , r0
 bb0 2,r4, -4
+
+or r30 , r31, r0
+POP(r31)
+POP(r1)
+jmp(r1)
