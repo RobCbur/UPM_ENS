@@ -42,29 +42,32 @@ PUSH(r31)
 
 
 
-or r31, r30 ,0
+or r31, r30 ,0 ;marco de pila
 
-ld r11, r31, 8
-subu r11,r11,4
+ld r11, r31, 8          ;r3 = contador
+subu r11,r11,4          ;r11 = puntero cadena
 subu r3,r3, 4
 
 
 
-addu r3,r3,4
+addu r3,r3,4            ; bucle
 addu r11,r11,4
-ld r12, r11, 0
+ld r12, r11, 0          ; r12 = una palabra de la cadena
 cmp r4 , r12 , r0
-bb0 12,r4, -4
+bb0 12,r4, -4           ;  si no  hay \0 en la palabra suma 4 y a la siguiente palabra, sino sigue
 
-subu r3,r3, 1
+
+subu r3,r3, 1            
 subu r11,r11,1
 
-addu r11,r11,1
-addu r3,r3,1
+addu r11,r11,1          ;bucle
+addu r3,r3,1 
 
-ld.bu r12,r11,0
-cmp r4 , r12 , r0
-bb0 2,r4, -4
+ld.bu r12,r11,0         ;r12 = un char de la palabra
+cmp r4 , r12 , r0      
+bb0 2,r4, -4            ; si r12 es \0 para, sino al sig char de la palabra
+
+or r29, r3, r0          ; r3 a r29 
 
 or r30 , r31, r0
 POP(r31)
