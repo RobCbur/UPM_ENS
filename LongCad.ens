@@ -88,7 +88,7 @@ addu r4,r0,0x0A
 addu r11,r0,0x0B
 addu r12,r0,0x0C
 jsr(r3)
+POP(r3)
 
 addu r4, r4 ,0xf0
 
-PUSH(r4)
