@@ -13,6 +13,7 @@ ENDMACRO
 
 POP: MACRO(ra)
     ld ra,r30,0
+    st r0, r30,r0
     add r30,r30,4
 ENDMACRO
 
@@ -23,7 +24,9 @@ ENDMACRO
 
 
 PALABRA: data "ersafiasek 3516"
-
+C:data "k" 
+from:data 3
+to:data 13
 LongCad:PUSH(r1)
 
 PUSH(r31)
@@ -76,7 +79,7 @@ jmp(r1)
 org 5000
 
 START:
-addu r30, r30, 256
+addu r30, r30, 352
 
 LEA(r3,PALABRA)
 PUSH(r3)
@@ -87,3 +90,5 @@ addu r12,r0,0x0C
 jsr(r3)
 
 addu r4, r4 ,0xf0
+
+PUSH(r4)
