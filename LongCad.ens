@@ -27,6 +27,7 @@ PALABRA: data "ersafiasek 3516"
 C:data "k" 
 from:data 3
 to:data 13
+
 LongCad:PUSH(r1)
 
 PUSH(r31)
