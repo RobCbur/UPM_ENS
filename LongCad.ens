@@ -22,11 +22,10 @@ PUSH: MACRO (ra)
     st ra,r30,0
 ENDMACRO
 
+org 2000
 
-PALABRA: data "ersafiasek 3516"
-C:data "k" 
-from:data 3
-to:data 13
+PALABRA: data 0x00
+
 
 LongCad:PUSH(r1)
 
