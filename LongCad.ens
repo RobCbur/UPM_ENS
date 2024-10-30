@@ -24,7 +24,7 @@ ENDMACRO
 
 org 2000
 
-PALABRA: data 0x00
+PALABRA: data "cvdgdgbdbdg"
 
 
 LongCad:PUSH(r1)
