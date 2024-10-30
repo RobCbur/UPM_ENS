@@ -1,0 +1,94 @@
+org 1000
+LEA: MACRO (ra, eti)
+    or ra, r0, low(eti)
+    or.u ra, ra, high(eti)
+ENDMACRO
+
+
+LOAD: MACRO (ra, eti)
+    LEA (ra, eti)
+    ld ra, ra, r0
+ENDMACRO
+
+
+POP: MACRO(ra)
+    ld ra,r30,0
+    st r0, r30,r0
+    add r30,r30,4
+ENDMACRO
+
+PUSH: MACRO (ra)
+    sub r30,r30,4
+    st ra,r30,0
+ENDMACRO
+
+org 2000
+
+PALABRA: data 0x00
+
+
+LongCad:PUSH(r1)
+
+PUSH(r31)
+PUSH(r3)
+PUSH(r11)
+PUSH(r4)
+PUSH(r12)
+xor r3,r3,r3
+xor r11,r11,r11
+xor r4,r4,r4
+xor r12,r12,r12
+
+or r31, r30 ,0 ;marco de pila
+
+ld r11, r31, 24          ;r3 = contador
+subu r11,r11,4          ;r11 = puntero cadena
+subu r3,r3, 4
+
+
+
+addu r3,r3,4            ; bucle
+addu r11,r11,4
+ld r12, r11, 0          ; r12 = una palabra de la cadena
+cmp r4 , r12 , r0
+bb0 12,r4, -4           ;  si no  hay \0 en la palabra suma 4 y a la siguiente palabra, sino sigue
+
+
+subu r3,r3, 1            
+subu r11,r11,1
+
+addu r11,r11,1          ;bucle
+addu r3,r3,1 
+
+ld.bu r12,r11,0         ;r12 = un char de la palabra
+cmp r4 , r12 , r0      
+bb0 2,r4, -4            ; si r12 es \0 para, sino al sig char de la palabra
+
+or r29, r3, r0          ; r3 a r29 
+
+or r30 , r31, r0
+
+POP(r12)
+POP(r4)
+POP(r11)
+POP(r3)
+POP(r31)
+POP(r1)
+jmp(r1)
+
+org 5000
+
+START:
+addu r30, r30, 352
+
+LEA(r3,PALABRA)
+PUSH(r3)
+LEA(r3,LongCad)
+addu r4,r0,0x0A
+addu r11,r0,0x0B
+addu r12,r0,0x0C
+jsr(r3)
+POP(r3)
+
+addu r4, r4 ,0xf0
+
