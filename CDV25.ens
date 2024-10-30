@@ -42,110 +42,120 @@ ENDMACRO
 
 
 
-LongCad:PUSH(r1) ;r31,20
+LongCad:
 
-PUSH(r31) ;r31,16
-PUSH(r3) ;r31,12
-PUSH(r11) ;r31,8
-PUSH(r4) ;r31,4
-PUSH(r12) ; r31,0
-xor r3,r3,r3
-xor r11,r11,r11
-xor r4,r4,r4
-xor r12,r12,r12
+PUSH(r1)            ; Guarda dirección de retorno
+PUSH(r3)            ; Guarda r3 (contador)
+PUSH(r4)            ; Guarda r4 (registro temporal para comparación)
+PUSH(r11)           ; Guarda r11 (puntero de la cadena)
+PUSH(r12)           ; Guarda r12 (temporal para cargar caracteres)
+PUSH(r31)           ; Guarda marco de pila anterior
 
-or r31, r30 ,0 ;marco de pila
+xor r4, r4, r4      ; Inicializa r4 a 0 para comparación
+xor r3, r3, r3      ; Inicializa r3 a 0, este será el contador de la longitud
+xor r11, r11, r11   ; Inicializa r11 a 0 (se usará como puntero)
+xor r12, r12, r12   ; Inicializa r12 a 0 para caracteres de la cadena
 
-ld r11, r31, 24          ;r3 = contador
-subu r11,r11,4          ;r11 = puntero cadena
-subu r3,r3, 4
+or r31, r30, 0      ; Guarda el marco actual de pila en r31
 
-
-
-addu r3,r3,4            ; bucle
-addu r11,r11,4
-ld r12, r11, 0          ; r12 = una palabra de la cadena
-cmp r4 , r12 , r0
-bb0 12,r4, -4           ;  si no  hay \0 en la palabra suma 4 y a la siguiente palabra, sino sigue
+ld r11, r31, 24     ; Carga la dirección de inicio de la cadena en r11
+subu r11, r11, 4    ; Desplaza el puntero 4 bytes hacia atrás para iniciar lectura
+subu r3, r3, 4      ; Configura el contador para leer palabras de 4 bytes
 
 
-subu r3,r3, 1            
-subu r11,r11,1
 
-addu r11,r11,1          ;bucle
-addu r3,r3,1 
+; Bucle para procesar palabras de 4 bytes
+addu r3, r3, 4      ; Incrementa el contador en 4 bytes
+addu r11, r11, 4    ; Mueve el puntero al siguiente bloque de 4 bytes
+ld r12, r11, 0      ; Carga la palabra actual de la cadena en r12
+cmp r4, r12, r0     ; Compara si la palabra contiene un byte nulo
+bb0 12, r4, -4      ; Si no hay byte nulo, sigue a la siguiente palabra
 
-ld.bu r12,r11,0         ;r12 = un char de la palabra
-cmp r4 , r12 , r0      
-bb0 2,r4, -4            ; si r12 es \0 para, sino al sig char de la palabra
 
-or r29, r3, r0          ; r3 a r29 
+subu r3, r3, 1      ; Ajusta el contador para leer los caracteres finales
+subu r11, r11, 1    ; Ajusta el puntero para comenzar el bucle de caracteres
 
-or r30 , r31, r0
 
-POP(r12)
-POP(r4)
-POP(r11)
-POP(r3)
+; Bucle para procesar caracteres individuales
+addu r3, r3, 1      ; Incrementa el contador
+addu r11, r11, 1    ; Avanza el puntero de un byte
+ld.bu r12, r11, 0   ; Carga un byte de la cadena
+cmp r4, r12, r0     ; Compara el byte con 0
+bb0 2, r4, -4       ; Si encuentra el terminador, sale del bucle
+
+or r29, r3, r0      ; Guarda la longitud calculada en r29
+or r30, r31, r0     ; Restaura el marco de pila
+
+; Restaura los registros y vuelve
+
 POP(r31)
+POP(r12)
+POP(r11)
+POP(r4)
+POP(r3)
+
 POP(r1)
 jmp(r1)
 
 
 
-BuscaCar:PUSH(r1) ;direccion de retorno ; r31, 32
+BuscaCar:
 
-PUSH(r31) ; antiguo r31 ; r31, 28
-PUSH(r3) ; r3 = contador ; r31, 24
-PUSH(r11) ; puntero ; r31, 20
-PUSH(r4) ;cmp / temp ; r31, 16
-PUSH(r6) ;tmp ; r31, 12
-PUSH(r5) ;contiene C; r31, 08
-PUSH(r12) ;contiene bit de palabra ; r31, 04
-PUSH(r7) ; r31, 0
+PUSH(r1)            ; Guarda dirección de retorno en la pila
+PUSH(r31)           ; Guarda el marco de pila anterior
+PUSH(r3)            ; Guarda r3 (contador de coincidencias)
+PUSH(r11)           ; Guarda r11 (puntero de la cadena)
+PUSH(r4)            ; Guarda r4 (registro de comparación)
+PUSH(r6)            ; Guarda r6 (registro temporal para tamaño)
+PUSH(r5)            ; Guarda r5 (carácter a buscar)
+PUSH(r12)           ; Guarda r12 (temporal para cargar caracteres)
+PUSH(r7)            ; Guarda r7 (temporal para controlar el final)
 
-xor r7,r7,r7
-xor r5, r5, r5
-xor r3,r3,r3
-xor r11,r11,r11
-xor r4,r4,r4
-xor r12,r12,r12
+; Inicializa los registros necesarios para la búsqueda
+xor r7, r7, r7      ; Inicializa r7 a 0 (usado para comparación de tamaño)
+xor r5, r5, r5      ; Inicializa r5 a 0 (carácter a buscar)
+xor r3, r3, r3      ; Inicializa r3 a 0 (contador de ocurrencias)
+xor r11, r11, r11   ; Inicializa r11 a 0 (puntero de la cadena)
+xor r4, r4, r4      ; Inicializa r4 a 0 (registro temporal para comparación)
+xor r12, r12, r12   ; Inicializa r12 a 0 (registro temporal para el carácter actual)
 
+or r31, r30, 0      ; Guarda el marco actual de pila en r31
 
-or r31, r30 ,0 ;marco de pila
-
-ld r5, r31, 48
-ld r11, r31, 44
-ld r4, r31 , 40
-ld r6, r31, 36
-subu r7 , r6,r4
-addu r11, r11, r4   
-
-
-subu r11,r11,1     ;r11 = puntero cadena
-subu r3,r3, 1   ;r3 = contador
+ld r5, r31, 48      ; Carga en r5 el carácter a buscar
+ld r11, r31, 44     ; Carga en r11 la dirección de inicio de la cadena
+ld r4, r31, 40      ; Carga en r4 el tamaño de la cadena
+ld r6, r31, 36      ; Carga en r6 el límite de búsqueda
+subu r7, r6, r4     ; Calcula r7 como límite de búsqueda menos el tamaño
+addu r11, r11, r4   ; Ajusta el puntero r11 para empezar a recorrer la cadena 
 
 
-addu r3,r3,1          
-addu r11,r11,1 ;bucle
+; Configura r3 y r11 para el inicio de la búsqueda
+subu r11, r11, 1    ; Mueve el puntero r11 una posición hacia atrás
+subu r3, r3, 1      ; Configura el contador en r3
 
-ld.bu r12, r11, 0        ; r12 = una palabra de la cadena
-cmp r4 , r12 , r5
-cmp r6 , r12 ,r0
-or r4,r6,r4
-cmp r6, r7, r3
-or r4,r4,r6
-bb0 2,r4, -8
+
+; Bucle para recorrer cada carácter de la cadena
+addu r3, r3, 1      ; Incrementa el contador de ocurrencias
+addu r11, r11, 1    ; Avanza el puntero de la cadena
+
+ld.bu r12, r11, 0   ; Carga el carácter actual de la cadena en r12
+cmp r4, r12, r5     ; Compara r12 (carácter actual) con r5 (carácter buscado)
+cmp r6, r12, r0     ; Compara r12 con 0 para ver si es el final de la cadena
+or r4, r6, r4       ; Almacena el resultado de comparación en r4
+cmp r6, r7, r3      ; Compara el contador con el límite de búsqueda
+or r4, r4, r6       ; Actualiza r4 para detenerse si se llega al límite
+bb0 2, r4, -8       ; Si r4 indica coincidencia o fin, termina el bucle
       
 
 
 
-or r29, r3, r0    
-ld r4, r31 , 40        ; r3 a r29 
-addu r29,r29, r4        ; r3 a r29 
+or r29, r3, r0      ; Guarda el total de coincidencias en r29
+ld r4, r31, 40      ; Restaura r4 desde la pila
+addu r29, r29, r4   ; Agrega el tamaño de la cadena a r29 si es necesario
 
-or r30 , r31, r0
+or r30, r31, 0      ; Restaura el marco de pila
 
+; Restaura los registros y vuelve
 POP(r7)
 POP(r12)
 POP(r5)
@@ -154,52 +164,57 @@ POP(r4)
 POP(r11)
 POP(r3)
 POP(r31)
+
 POP(r1)
 jmp(r1)
 
 
 CoincidenCad: PUSH(r1) ;31,32
 
-PUSH(r31) ;31,28
-PUSH(r3) ; 31,24
-PUSH(r11) ;31,20
-PUSH(r4) ;r31,16
-PUSH(r12) ; r31,12
-PUSH(r21) ;r31,8
-PUSH(r22) ; r31,4
-PUSH(r5) ;r31,0
-
-xor r5,r5,r5
-xor r3,r3,r3
-xor r11,r11,r11
-xor r4,r4,r4
-xor r12,r12,r12
-xor r21,r21,r21
-xor r22,r22,r22
-
-or r31, r30 ,0 ;marco de pila
-
-ld r11, r31, 40
-ld r12, r31,36        ;r3 = contador
-subu r11,r11,1
-subu r12,r12,1
-subu r3,r3,1        ;r11 = puntero cadena
+PUSH(r1)            ; Guarda dirección de retorno
+PUSH(r31)           ; Guarda marco de pila anterior
+PUSH(r3)            ; Guarda r3 (contador)
+PUSH(r11)           ; Guarda r11 (puntero de la primera cadena)
+PUSH(r4)            ; Guarda r4 (registro de comparación)
+PUSH(r12)           ; Guarda r12 (puntero de la segunda cadena)
+PUSH(r21)           ; Guarda r21 (temporal para cargar de la primera cadena)
+PUSH(r22)           ; Guarda r22 (temporal para cargar de la segunda cadena)
+PUSH(r5)            ; Guarda r5 (registro de coincidencias)
 
 
-addu r3,r3,1
-addu r12,r12,1            ; bucle
-addu r11,r11,1
-ld.bu r21, r11, 0
-ld.bu r22, r12,0          ; r12 = una palabra de la cadena
-cmp r4 , r21, r22
-cmp r5, r21,r0
-bb0 2,r4, 2; si r12 es \0 , sino al sig char de la palabra
-bb0 2 , r5 , -8
+xor r5, r5, r5      ; Inicializa r5 a 0 (registro de coincidencias)
+xor r3, r3, r3      ; Inicializa r3 a 0 (contador de coincidencias)
+xor r11, r11, r11   ; Inicializa r11 a 0 (puntero de la primera cadena)
+xor r4, r4, r4      ; Inicializa r4 a 0 (comparación)
+xor r12, r12, r12   ; Inicializa r12 a 0 (puntero de la segunda cadena)
+xor r21, r21, r21   ; Inicializa r21 a 0 (temporal de primera cadena)
+xor r22, r22, r22   ; Inicializa r22 a 0 (temporal de segunda cadena)
 
-or r29, r3, r0          ; r3 a r29 
-or r30 , r31, r0
+or r31, r30, 0      ; Guarda el marco actual de pila en r31
+
+ld r11, r31, 40     ; Carga la dirección de la primera cadena en r11
+ld r12, r31, 36     ; Carga la dirección de la segunda cadena en r12
+subu r11, r11, 1    ; Ajusta el puntero de la primera cadena
+subu r12, r12, 1    ; Ajusta el puntero de la segunda cadena
+subu r3, r3, 1      ; Configura el contador
 
 
+; Bucle de comparación de caracteres
+addu r3, r3, 1      ; Incrementa el contador
+addu r12, r12, 1    ; Avanza el puntero de la segunda cadena
+addu r11, r11, 1    ; Avanza el puntero de la primera cadena
+ld.bu r21, r11, 0   ; Carga un byte de la primera cadena en r21
+ld.bu r22, r12, 0   ; Carga un byte de la segunda cadena en r22
+cmp r4, r21, r22    ; Compara los bytes de ambas cadenas
+cmp r5, r21, r0     ; Compara el byte con 0
+bb0 2, r4, 2        ; Si los caracteres no coinciden, termina el bucle
+bb0 2, r5, -8       ; Si se encuentra el fin de cadena, termina el bucle
+
+
+or r29, r3, r0      ; Guarda la cantidad de coincidencias en r29
+or r30, r31, r0     ; Restaura el marco de pila
+
+; Restaura los registros y vuelve
 POP(r22)
 POP(r21)
 POP(r12)
@@ -207,6 +222,7 @@ POP(r4)
 POP(r11)
 POP(r3)
 POP(r31)
+
 POP(r1)
 jmp(r1)
 
