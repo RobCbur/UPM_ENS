@@ -1,0 +1,135 @@
+START:
+
+or r30 ,r0, 256
+
+
+or r4 ,r0,4
+or r5 ,r0,5
+or r6, r0,6
+or r7, r0,7
+or r8 ,r0,8
+or r9, r0,9
+or r10, r0,10
+or r11, r0,11
+or r12 ,r0,12
+or r13 ,r0,13
+or r14, r0,14
+or r15, r0,15
+or r16 ,r0,16
+or r17 ,r0,17
+or r18, r0,18
+or r19, r0,19
+or r20 ,r0,20
+or r21, r0,21
+or r22, r0,22
+or r23, r0,23
+
+
+
+
+LEA(r3, palabra_loncad1)
+PUSH(r3)
+LEA(r3, LongCad)
+jsr(r3)
+POP(r3)
+
+BREAK: 
+
+LEA(r3, palabra_longad2)
+PUSH(r3)
+LEA(r3, LongCad)
+jsr(r3)
+POP(r3)
+
+BREAK2: 
+
+LEA(r3, palabra_longcad3)
+PUSH(r3)
+LEA(r3, LongCad)
+jsr(r3)
+POP(r3)
+
+BREAK3: 
+
+LOAD(r3,c_buscacar1)
+PUSH(r3) 
+LEA(r3,palabra_buscacar)
+PUSH(r3) 
+LOAD(r3,from_buscacar1)
+PUSH(r3) 
+LOAD(r3,to_buscacar1)
+PUSH(r3) 
+
+LEA(r3, BuscaCar)
+
+jsr(r3)
+
+POP(r3)
+
+BREAK4: or r5,r5,r5
+
+LOAD(r3,c_buscacar1)
+PUSH(r3) 
+LEA(r3,palabra_buscacar)
+PUSH(r3) 
+LOAD(r3,from_buscacar2)
+PUSH(r3) 
+LOAD(r3,to_buscacar2)
+PUSH(r3) 
+
+LEA(r3, BuscaCar)
+
+jsr(r3)
+
+POP(r3)
+
+BREAK5: or r5,r5,r5
+
+LOAD(r3,c_buscacar2)
+PUSH(r3) 
+LEA(r3,palabra_buscacar)
+PUSH(r3) 
+LOAD(r3,from_buscacar3)
+PUSH(r3) 
+LOAD(r3,to_buscacar3)
+PUSH(r3) 
+
+LEA(r3, BuscaCar)
+
+jsr(r3)
+
+POP(r3)
+
+BREAK6: or r5,r5,r5
+
+
+LEA(r3,palabra_coincidencad1)
+PUSH(r3) 
+LEA(r3,CoincidenCad)
+
+jsr(r3)
+POP(r3)
+
+BREAK7: or r5,r5,r5
+
+LEA(r3,palabra_coincidencad1)
+PUSH(r3) 
+LEA(r3,palabra_coincad2)
+PUSH(r3) 
+LEA(r3,CoincidenCad)
+
+jsr(r3)
+POP(r3)
+
+BREAK8: or r5,r5,r5
+
+LEA(r3,palabra_coincidencad1)
+PUSH(r3) 
+LEA(r3,palabra_coinc3)
+PUSH(r3) 
+LEA(r3,CoincidenCad)
+
+jsr(r3)
+POP(r3)
+
+BREAK9: or r5,r5,r5

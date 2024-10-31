@@ -1,11 +1,55 @@
 org 512
 
-palabra: data "abzxqwyuñl"
+palabra_loncad1: data "abzxqwyunl"
+ res 4
+
 palabra_longad2: data 0x00
 
+res 4
+
+palabra_longcad3: data "0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF01234560123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF789ABCDEF"
+
+res 4
+
+palabra_buscacar: data "esalon 123456789"
+
+res 4
+
+palabra_coincidencad1:data "qwerty"
+
+res 4
+
+palabra_coincad2:data "azerty" 
+
+res 4
+
+palabra_coinc3:data "qwerti"
+
+res 4
+;;;;;;;;;;;;;;;;;;;;;;;
+c_buscacar1: data "n"
+
+c_buscacar2: data "p"
+;;;;;;;;;;;;;;;;;;;;;;;;;
+
+from_buscacar1: data 1
+
+to_buscacar1: data 10
+;;;;;;;;;;;;;;;;
+
+from_buscacar2:data 7
+
+to_buscacar2: data 11
+
+;;;;;;;;;;;;;;;;;;;;
+from_buscacar3:data 0
+
+to_buscacar3: data 15
 
 
-org 1024
+
+
+org 2048
 
 
 
@@ -98,7 +142,7 @@ or r30, r31, r0     ; Restaura el marco de pila
 POP(r12)
 POP(r11)
 POP(r4)
-;POP(r3
+;POP(r3)
 POP(r31)
 POP(r1)
 jmp(r1)
@@ -267,8 +311,109 @@ or r23, r0,23
 
 
 
-;LEA(r3, palabra)
-;PUSH(r3)
-;LEA(r3, LongCad)
-;jsr(r3)
-;POP(r3)
+LEA(r3, palabra_loncad1)
+PUSH(r3)
+LEA(r3, LongCad)
+jsr(r3)
+POP(r3)
+
+BREAK: 
+
+LEA(r3, palabra_longad2)
+PUSH(r3)
+LEA(r3, LongCad)
+jsr(r3)
+POP(r3)
+
+BREAK2: 
+
+LEA(r3, palabra_longcad3)
+PUSH(r3)
+LEA(r3, LongCad)
+jsr(r3)
+POP(r3)
+
+BREAK3: 
+
+LOAD(r3,c_buscacar1)
+PUSH(r3) 
+LEA(r3,palabra_buscacar)
+PUSH(r3) 
+LOAD(r3,from_buscacar1)
+PUSH(r3) 
+LOAD(r3,to_buscacar1)
+PUSH(r3) 
+
+LEA(r3, BuscaCar)
+
+jsr(r3)
+
+POP(r3)
+
+BREAK4: or r5,r5,r5
+
+LOAD(r3,c_buscacar1)
+PUSH(r3) 
+LEA(r3,palabra_buscacar)
+PUSH(r3) 
+LOAD(r3,from_buscacar2)
+PUSH(r3) 
+LOAD(r3,to_buscacar2)
+PUSH(r3) 
+
+LEA(r3, BuscaCar)
+
+jsr(r3)
+
+POP(r3)
+
+BREAK5: or r5,r5,r5
+
+LOAD(r3,c_buscacar2)
+PUSH(r3) 
+LEA(r3,palabra_buscacar)
+PUSH(r3) 
+LOAD(r3,from_buscacar3)
+PUSH(r3) 
+LOAD(r3,to_buscacar3)
+PUSH(r3) 
+
+LEA(r3, BuscaCar)
+
+jsr(r3)
+
+POP(r3)
+
+BREAK6: or r5,r5,r5
+
+
+LEA(r3,palabra_coincidencad1)
+PUSH(r3) 
+LEA(r3,CoincidenCad)
+
+jsr(r3)
+POP(r3)
+
+BREAK7: or r5,r5,r5
+
+LEA(r3,palabra_coincidencad1)
+PUSH(r3) 
+LEA(r3,palabra_coincad2)
+PUSH(r3) 
+LEA(r3,CoincidenCad)
+
+jsr(r3)
+POP(r3)
+
+BREAK8: or r5,r5,r5
+
+LEA(r3,palabra_coincidencad1)
+PUSH(r3) 
+LEA(r3,palabra_coinc3)
+PUSH(r3) 
+LEA(r3,CoincidenCad)
+
+jsr(r3)
+POP(r3)
+
+BREAK9: or r5,r5,r5
