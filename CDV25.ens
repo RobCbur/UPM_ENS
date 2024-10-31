@@ -98,7 +98,7 @@ or r30, r31, r0     ; Restaura el marco de pila
 POP(r12)
 POP(r11)
 POP(r4)
-;POP(r3)
+;POP(r3
 POP(r31)
 POP(r1)
 jmp(r1)
