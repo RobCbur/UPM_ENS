@@ -1,52 +1,106 @@
-org 500 ; ------------------------VARIABLES TEST-----------------------------
+org 496 ; ------------------------VARIABLES TEST-----------------------------
 
 palabra_loncad1: data "abzxqwyunl" ; size 10 (A)
 
- res 4
+ res 12
 
 palabra_longad2: data 0x00; 0
 
 res 4
 
-palabra_longcad3: data "0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF" ;0x100
+
+
+palabra_buscacar: data "*qwe*rt--y\0"
 
 res 4
 
-palabra_buscacar: data "esalon 123456789"
+plabra_buscacar2: data 0x6577712A ,0x2D74722A , 0x00A02D
+
+res 4
+
+;palabra_buscacar3: data "*aze*rt--y\0"
+
+palabra_busca3: data "a*ze*rt--y\0"
+
 
 res 4
 
 palabra_coincidencad1:data "qwerty"
 
-res 4
+res 8
 
 palabra_coincad2:data "azerty" 
 
-res 4
+res 8
 
 palabra_coinc3:data "qwerti"
 
-res 4
+res 8
 ;;;;;;;;;;;;;;;;;;;;;;;
-c_buscacar1: data "n"
+c_buscacar1: data "*"
 
-c_buscacar2: data "p"
+res 12
+
+c_buscacar2: data "|"
+
+res 12
+
+c_buscacar3: data 0xA0
+
+res 12
+c_buscacar4: data "y"
+
+res 12
+
+c_buscacar5: data "a"
+
+res 12
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 
-from_buscacar1: data 1
+from_buscacar1: data 0
+
+res 12
 
 to_buscacar1: data 10
+
+res 12
 ;;;;;;;;;;;;;;;;
 
-from_buscacar2:data 7
+from_buscacar2:data 3
 
-to_buscacar2: data 11
+res 12
+
+to_buscacar2: data 10
+
+res 12
 
 ;;;;;;;;;;;;;;;;;;;;
-from_buscacar3:data 0
+from_buscacar3:data 5
 
-to_buscacar3: data 15
+res 12
 
+to_buscacar3: data 5
+
+res 12
+
+;;;;;;;;;;;;;;;;;;;;;
+
+from_buscacar4:data 0
+
+res 12
+
+to_buscacar4: data 7
+
+res 12
+
+
+
+
+
+
+palabra_longcad3: data "0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF" ;0x100
+
+res 16
 
 
 
@@ -75,7 +129,7 @@ ENDMACRO
 
 POP: MACRO(ra)
     ld ra,r30,0
-    st r0, r30,r0
+    
     add r30,r30,4
 ENDMACRO
 
@@ -439,7 +493,7 @@ jmp(r1)
 
 
 
-TBUSCCAR1:PUSH(r1) ; 0x 05
+TBUSCCAR1:PUSH(r1) ; 0x00
 LOAD(r3,c_buscacar1)
 PUSH(r3) 
 LEA(r3,palabra_buscacar)
@@ -463,7 +517,7 @@ jmp(r1)
 
 
 
-TBUSCCAR2:PUSH(r1) ;0xB
+TBUSCCAR2:PUSH(r1) ;0x4
  LOAD(r3,c_buscacar1)
 PUSH(r3) 
 LEA(r3,palabra_buscacar)
@@ -487,14 +541,102 @@ jmp(r1)
 
 
 
-TBUSCCAR3:PUSH(r1) ;0xF
+TBUSCCAR3:PUSH(r1) ;0xA
  LOAD(r3,c_buscacar2)
 PUSH(r3) 
 LEA(r3,palabra_buscacar)
 PUSH(r3) 
+LOAD(r3,from_buscacar1)
+PUSH(r3) 
+LOAD(r3,to_buscacar1)
+PUSH(r3) 
+
+LEA(r3, BuscaCar)
+
+jsr(r3)
+
+POP(r3)
+POP(r3)
+POP(r3)
+POP(r3)
+POP(r1)
+
+jmp(r1)
+
+TBUSCCAR4:PUSH(r1) ;0xA
+ LOAD(r3,c_buscacar3)
+PUSH(r3) 
+LEA(r3,plabra_buscacar2)
+PUSH(r3) 
+LOAD(r3,from_buscacar1)
+PUSH(r3) 
+LOAD(r3,to_buscacar1)
+PUSH(r3) 
+
+LEA(r3, BuscaCar)
+
+jsr(r3)
+
+POP(r3)
+POP(r3)
+POP(r3)
+POP(r3)
+POP(r1)
+
+jmp(r1)
+
+TBUSCCAR5:PUSH(r1) ;0xA
+ LOAD(r3,c_buscacar1)
+PUSH(r3) 
+LEA(r3,plabra_buscacar)
+PUSH(r3) 
 LOAD(r3,from_buscacar3)
 PUSH(r3) 
 LOAD(r3,to_buscacar3)
+PUSH(r3) 
+
+LEA(r3, BuscaCar)
+
+jsr(r3)
+
+POP(r3)
+POP(r3)
+POP(r3)
+POP(r3)
+POP(r1)
+
+jmp(r1)
+
+TBUSCCAR6:PUSH(r1) ;0xA
+ LOAD(r3,c_buscacar4)
+PUSH(r3) 
+LEA(r3,plabra_buscacar)
+PUSH(r3) 
+LOAD(r3,from_buscacar4)
+PUSH(r3) 
+LOAD(r3,to_buscacar4)
+PUSH(r3) 
+
+LEA(r3, BuscaCar)
+
+jsr(r3)
+
+POP(r3)
+POP(r3)
+POP(r3)
+POP(r3)
+POP(r1)
+
+jmp(r1)
+
+TBUSCCAR7:PUSH(r1) ;0xA
+ LOAD(r3,c_buscacar5)
+PUSH(r3) 
+LEA(r3,palabra_busca3)
+PUSH(r3) 
+LOAD(r3,from_buscacar1)
+PUSH(r3) 
+LOAD(r3,to_buscacar1)
 PUSH(r3) 
 
 LEA(r3, BuscaCar)
@@ -588,9 +730,18 @@ or r21, r0,21
 or r22, r0,22
 or r23, r0,23
 
+PUSH(r3)
+PUSH(r1)
 
-bsr TCC3
 BREAK:
 
-addu r5,r5,0xff
+bsr TBUSCCAR6
+
+POP(r1)
+POP(r3)
+
+
+;BREAK: or r5, r5, r5
+
+
 
