@@ -1,5 +1,7 @@
 org 496 ; ------------------------VARIABLES TEST-----------------------------
 
+r30_inicio: data 86000
+
 palabra_loncad1: data "abzxqwyunl" ; size 10 (A)
 
  res 12
@@ -706,8 +708,7 @@ org 7000 ;-------------PROGRAMA--------------
 
 START:
 
-or r30 ,r0, 256
-
+LEA(r30, r30_inicio)
 
 or r4 ,r0,4
 or r5 ,r0,5
@@ -735,7 +736,7 @@ PUSH(r1)
 
 BREAK:
 
-bsr TBUSCCAR6
+bsr TBUSCCAR4
 
 POP(r1)
 POP(r3)
