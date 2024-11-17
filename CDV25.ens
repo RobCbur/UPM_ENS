@@ -108,9 +108,12 @@ n_bit0: data 0
 
 n_bit1: data 1
 
-n_bibt4: data 4
+n_bit4: data 4
 
-n_bibt8: data 8
+n_bit7: data 7
+
+
+n_bit8: data 8
 
 n_bit32: data 32
 
@@ -525,7 +528,7 @@ jmp(r1)
 
 
 ; -----------------------------TESTS--------------------------------
-org 5000
+org 4000
 
 TLONGCA1:PUSH(r1) ; 0x10
 LEA(r20, palabra_loncad1)
@@ -806,6 +809,133 @@ POP(r1)
 jmp(r1)
 
 
+TPB3: PUSH(r1)
+
+LOAD(r20,n_bit4)
+PUSH(r20)
+LOAD(r20,campo_bits)
+PUSH(r20)
+
+bsr PoneBitA1
+
+POP(r20)
+POP(r20)
+
+
+POP(r1)
+jmp(r1)
+
+TPB4: PUSH(r1)
+
+LOAD(r20,n_bit8)
+PUSH(r20)
+LOAD(r20,campo_bits)
+PUSH(r20)
+
+bsr PoneBitA1
+
+POP(r20)
+POP(r20)
+
+LOAD(r20,n_bit0)
+PUSH(r20)
+LOAD(r20,campo_bits)
+PUSH(r20)
+
+bsr PoneBitA1
+
+POP(r20)
+POP(r20)
+
+POP(r1)
+jmp(r1)
+
+
+TPB5: PUSH(r1)
+
+LOAD(r20,n_bit0)
+PUSH(r20)
+LOAD(r20,campo_bits)
+PUSH(r20)
+
+bsr PoneBitA1
+
+POP(r20)
+POP(r20)
+
+LOAD(r20,n_bit7)
+PUSH(r20)
+LOAD(r20,campo_bits)
+PUSH(r20)
+
+bsr PoneBitA1
+
+POP(r20)
+POP(r20)
+
+POP(r1)
+jmp(r1)
+
+TPB6: PUSH(r1)
+
+LOAD(r20,n_bit32)
+PUSH(r20)
+LOAD(r20,campo_bits)
+PUSH(r20)
+
+bsr PoneBitA1
+
+POP(r20)
+POP(r20)
+
+
+POP(r1)
+jmp(r1)
+
+
+
+TPB7: PUSH(r1)
+
+LOAD(r20,n_bit32)
+PUSH(r20)
+LOAD(r20,campo_bits)
+PUSH(r20)
+
+bsr PoneBitA1
+
+POP(r20)
+POP(r20)
+
+LOAD(r20,n_bit44)
+PUSH(r20)
+LOAD(r20,campo_bits)
+PUSH(r20)
+
+bsr PoneBitA1
+
+POP(r20)
+POP(r20)
+
+POP(r1)
+jmp(r1)
+
+
+TPB8: PUSH(r1)
+
+LOAD(r20,n_bit122)
+PUSH(r20)
+LOAD(r20,campo_bits)
+PUSH(r20)
+
+bsr PoneBitA1
+
+POP(r20)
+POP(r20)
+
+
+POP(r1)
+jmp(r1)
+
 
 org 7000 ;-------------PROGRAMA--------------
 
@@ -842,7 +972,8 @@ PUSH(r1)
 
 
 
-bsr TPB2
+bsr TPB8
+
 
 POP(r1)
 POP(r20)
