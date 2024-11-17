@@ -110,6 +110,9 @@ n_bit0: data 0
 
 n_bit1: data 1
 
+n_bit2: data 2
+
+
 n_bit4: data 4
 
 n_bit7: data 7
@@ -123,6 +126,7 @@ n_bit44: data 44
 
 n_bit122: data 122
 
+res 12
 
 
 campo_bits: data 0x00
@@ -479,9 +483,9 @@ xor r8,r8,r8
 
 or r31, r30, 0
 
-ld r20, r30, 28 ; guarda en r20 dir inicio
+ld r20, r31, 28 ; guarda en r20 dir inicio
 or r21, r0, 7 ; guarda en r21 num 7
-ld r5, r30, 32; guarda en r5 n_bit
+ld r5, r31, 32; guarda en r5 n_bit
 
 
 divu r6 , r5, 8 ;  pon en r6 el byte en l q hay q escribir
@@ -523,6 +527,55 @@ jmp(r1)
 
 LeeBit:
 PUSH(r1)
+
+PUSH(r21)
+PUSH(r20)
+PUSH(r5)
+PUSH(r6)
+PUSH(r7)
+PUSH(r8)
+
+
+
+xor r21, r21, r21
+xor r20, r20, r20
+xor r5, r5, r5
+xor r6, r6, r6
+xor r7,r7,r7
+xor r8,r8,r8
+
+or r31, r30, 0
+
+ld r20, r31, 28 ; guarda en r20 dir inicio
+or r21, r0, 7 ; guarda en r21 num 7
+ld r5, r31, 32; guarda en r5 n_bit
+
+
+divu r6 , r5, 8 ;  pon en r6 el byte en l q hay q leer
+
+ld.bu r7, r20, r6 ; guarda en r7 el byte a leer
+
+
+mulu r8 , r6, 8
+subu r8, r5, r8 ; guarda en r8 r5 mod 8
+
+sub r8, r21, r8 ; hace 7 - r8 para empezar por la izquierda
+
+
+set r8, r8, 1<5> ; pone un 1 al bit 5 de r8
+extu r29, r7 ,r8 ; pone a 1 un campo de bits de longitud 1 y de desplazamiento r8 en r7
+
+
+or r30, r31, 0
+
+
+POP(r8)
+POP(r7)
+POP(r6)
+POP(r5)
+POP(r20)
+POP(r21)
+
 POP(r1)
 jmp(r1)
 
@@ -996,9 +1049,205 @@ POP(r20)
 POP(r1)
 jmp(r1)
 
+TLB1:
+
+PUSH(r1)
+
+LOAD(r20,n_bit0)
+PUSH(r20)
+LEA(r20,campo_bits)
+PUSH(r20)
+
+bsr PoneBitA1
 
 
-org 7000 ;-------------PROGRAMA--------------
+bsr LeeBit
+
+POP(r20)
+POP(r20)
+
+
+POP(r1)
+jmp(r1)
+
+TLB2:
+
+PUSH(r1)
+
+LOAD(r20,n_bit0)
+PUSH(r20)
+LEA(r20,campo_bits)
+PUSH(r20)
+
+bsr PoneBitA1
+
+
+
+LOAD(r20,n_bit1)
+PUSH(r20)
+LEA(r20,campo_bits)
+PUSH(r20)
+
+bsr PoneBitA1
+
+
+LOAD(r20,n_bit4)
+PUSH(r20)
+LEA(r20,campo_bits)
+PUSH(r20)
+
+bsr PoneBitA1
+
+
+bsr LeeBit
+addu r28,r28,r29
+
+POP(r20)
+POP(r20)
+
+bsr LeeBit
+addu r28,r28,r29
+
+
+POP(r20)
+POP(r20)
+
+bsr LeeBit
+addu r28,r28,r29
+
+
+POP(r20)
+POP(r20)
+
+
+
+
+
+POP(r1)
+jmp(r1)
+
+
+TLB3:
+
+PUSH(r1)
+
+LOAD(r20,n_bit0)
+PUSH(r20)
+LEA(r20,campo_bits)
+PUSH(r20)
+
+bsr PoneBitA1
+
+
+
+LOAD(r20,n_bit1)
+PUSH(r20)
+LEA(r20,campo_bits)
+PUSH(r20)
+
+bsr PoneBitA1
+
+
+LOAD(r20,n_bit4)
+PUSH(r20)
+LEA(r20,campo_bits)
+PUSH(r20)
+
+bsr PoneBitA1
+
+
+bsr LeeBit
+addu r28,r28,r29
+
+POP(r20)
+POP(r20)
+
+bsr LeeBit
+addu r28,r28,r29
+
+
+POP(r20)
+POP(r20)
+
+bsr LeeBit
+addu r28,r28,r29
+
+
+POP(r20)
+POP(r20)
+
+LOAD(r20, n_bit7)
+PUSH(r20)
+LEA(r20, campo_bits)
+PUSH(r20)
+
+bsr LeeBit
+
+and r28, r28, r29
+
+POP(r1)
+jmp(r1)
+
+
+TLB4:
+
+PUSH(r1)
+
+LOAD(r20,n_bit0)
+PUSH(r20)
+LEA(r20,campo_bits)
+PUSH(r20)
+
+bsr PoneBitA1
+
+
+
+LOAD(r20,n_bit1)
+PUSH(r20)
+LEA(r20,campo_bits)
+PUSH(r20)
+
+bsr PoneBitA1
+
+
+LOAD(r20,n_bit2)
+PUSH(r20)
+LEA(r20,campo_bits)
+PUSH(r20)
+
+bsr PoneBitA1
+
+
+bsr LeeBit
+addu r28,r28,r29
+
+POP(r20)
+POP(r20)
+
+bsr LeeBit
+addu r28,r28,r29
+
+
+POP(r20)
+POP(r20)
+
+bsr LeeBit
+addu r28,r28,r29
+
+
+POP(r20)
+POP(r20)
+
+
+
+
+
+POP(r1)
+jmp(r1)
+
+
+
+org 9000 ;-------------PROGRAMA--------------
 
 
 START:
@@ -1033,7 +1282,8 @@ PUSH(r1)
 
 
 
-bsr TPB9
+
+bsr TLB4
 
 
 POP(r1)

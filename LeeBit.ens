@@ -1,11 +1,11 @@
-org 0x12000; ------------------------VARIABLES TEST-----------------------------
+org 500; ------------------------VARIABLES TEST-----------------------------
   
 
 dir: data 0x12ce943b
 
 data  0x12ce943b
 
-num: data 36
+num: data 34
 
 r30_inicio: data 0x014fe8
 
@@ -130,9 +130,9 @@ or r23, r0,0xff
 
 
 
-LEA(r3, num)
+LOAD(r3, num)
 PUSH(r3)
-LOAD(r3, dir)
+LEA(r3, dir)
 PUSH(r3)
  
 
