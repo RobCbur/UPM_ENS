@@ -470,6 +470,8 @@ xor r6, r6, r6
 xor r7,r7,r7
 xor r8,r8,r8
 
+or r31, r30, 0
+
 ld r20, r30, 28 ; guarda en r20 dir inicio
 or r21, r0, 7 ; guarda en r21 num 7
 ld r5, r30, 32; guarda en r5 n_bit
@@ -490,6 +492,9 @@ set r8, r8, 1<5> ; pone un 1 al bit 5 de r8
 set r7, r7 ,r8 ; pone a 1 un campo de bits de longitud 1 y de desplazamiento r8 en r7
 
 st.b r7, r20 , r6 ; guarda el byte cambiado a memoria
+
+
+or r30, r31, 0
 
 
 POP(r8)
