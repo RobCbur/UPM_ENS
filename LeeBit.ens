@@ -1,0 +1,142 @@
+org 0x12000; ------------------------VARIABLES TEST-----------------------------
+  
+
+dir: data 0x12ce943b
+
+data  0x12ce943b
+
+num: data 36
+
+r30_inicio: data 0x014fe8
+
+
+
+
+
+org 1024
+
+
+
+DBNZ: MACRO (ra,eti)
+    sub ra,ra,1
+    cmp r4,ra,0r6
+    bb0 2,r4,eti
+ENDMACRO
+
+LEA: MACRO (ra, eti)
+    or ra, r0, low(eti)
+    or.u ra, ra, high(eti)
+ENDMACRO
+
+
+LOAD: MACRO (ra, eti)
+    LEA (ra, eti)
+    ld ra, ra, r0
+ENDMACRO
+
+
+POP: MACRO(ra)
+    ld ra,r30,0
+    st r0, r30,r0
+    add r30,r30,4
+ENDMACRO
+
+PUSH: MACRO (ra)
+    sub r30,r30,4
+    st ra,r30,0
+ENDMACRO
+
+org 2000
+
+PoneBitA1:
+PUSH(r1)
+PUSH(r21)
+PUSH(r20)
+PUSH(r5)
+PUSH(r6)
+PUSH(r7)
+PUSH(r8)
+
+
+
+xor r21, r21, r21
+xor r20, r20, r20
+xor r5, r5, r5
+xor r6, r6, r6
+xor r7,r7,r7
+xor r8,r8,r8
+
+ld r20, r30, 28 ; guarda en r20 dir inicio
+or r21, r0, 7 ; guarda en r21 num 7
+ld r5, r30, 32; guarda en r5 n_bit
+
+
+divu r6 , r5, 8 ;  pon en r6 el byte en l q hay q leer
+
+ld.bu r7, r20, r6 ; guarda en r7 el byte a leer
+
+
+mulu r8 , r6, 8
+subu r8, r5, r8 ; guarda en r8 r5 mod 8
+
+sub r8, r21, r8 ; hace 7 - r8 para empezar por la izquierda
+
+
+set r8, r8, 1<5> ; pone un 1 al bit 5 de r8
+extu r29, r7 ,r8 ; pone a 1 un campo de bits de longitud 1 y de desplazamiento r8 en r7
+
+
+
+
+POP(r8)
+POP(r7)
+POP(r6)
+POP(r5)
+POP(r20)
+POP(r21)
+POP(r1)
+jmp(r1)
+
+
+org 7000
+
+START:
+
+LOAD(r30, r30_inicio)
+
+
+
+
+or r4 ,r0,4
+or r5 ,r0,5
+or r6, r0,6
+or r7, r0,7
+or r8 ,r0,8
+or r9, r0,9
+or r10, r0,10
+or r11, r0,11
+or r12 ,r0,12
+or r13 ,r0,13
+or r14, r0,14
+or r15, r0,15
+or r16 ,r0,16
+or r17 ,r0,17
+or r18, r0,18
+or r19, r0,19
+or r20 ,r0,20
+or r21, r0,21
+or r22, r0,22
+or r23, r0,0xff
+
+
+
+LEA(r3, num)
+PUSH(r3)
+LOAD(r3, dir)
+PUSH(r3)
+ 
+
+bsr PoneBitA1
+
+POP(r3)
+POP(r3)

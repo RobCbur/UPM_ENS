@@ -2,6 +2,8 @@ org 496 ; ------------------------VARIABLES TEST-----------------------------
 
 r30_inicio: data 86000
 
+res 12
+
 palabra_loncad1: data "abzxqwyunl" ; size 10 (A)
 
  res 12
@@ -121,7 +123,12 @@ n_bit44: data 44
 
 n_bit122: data 122
 
-campo_bits: data 0x12000
+
+
+campo_bits: data 0x00
+
+res  28
+
 
 
 
@@ -774,7 +781,7 @@ TPB1: PUSH(r1)
 
 LOAD(r20,n_bit0)
 PUSH(r20)
-LOAD(r20,campo_bits)
+LEA(r20,campo_bits)
 PUSH(r20)
 
 bsr PoneBitA1
@@ -791,7 +798,7 @@ TPB2: PUSH(r1)
 
 LOAD(r20,n_bit0)
 PUSH(r20)
-LOAD(r20,campo_bits)
+LEA(r20,campo_bits)
 PUSH(r20)
 
 bsr PoneBitA1
@@ -801,7 +808,7 @@ POP(r20)
 
 LOAD(r20,n_bit1)
 PUSH(r20)
-LOAD(r20,campo_bits)
+LEA(r20,campo_bits)
 PUSH(r20)
 
 bsr PoneBitA1
@@ -818,7 +825,7 @@ TPB3: PUSH(r1)
 
 LOAD(r20,n_bit4)
 PUSH(r20)
-LOAD(r20,campo_bits)
+LEA(r20,campo_bits)
 PUSH(r20)
 
 bsr PoneBitA1
@@ -834,7 +841,7 @@ TPB4: PUSH(r1)
 
 LOAD(r20,n_bit8)
 PUSH(r20)
-LOAD(r20,campo_bits)
+LEA(r20,campo_bits)
 PUSH(r20)
 
 bsr PoneBitA1
@@ -844,7 +851,7 @@ POP(r20)
 
 LOAD(r20,n_bit0)
 PUSH(r20)
-LOAD(r20,campo_bits)
+LEA(r20,campo_bits)
 PUSH(r20)
 
 bsr PoneBitA1
@@ -860,7 +867,7 @@ TPB5: PUSH(r1)
 
 LOAD(r20,n_bit0)
 PUSH(r20)
-LOAD(r20,campo_bits)
+LEA(r20,campo_bits)
 PUSH(r20)
 
 bsr PoneBitA1
@@ -870,7 +877,7 @@ POP(r20)
 
 LOAD(r20,n_bit7)
 PUSH(r20)
-LOAD(r20,campo_bits)
+LEA(r20,campo_bits)
 PUSH(r20)
 
 bsr PoneBitA1
@@ -885,7 +892,7 @@ TPB6: PUSH(r1)
 
 LOAD(r20,n_bit32)
 PUSH(r20)
-LOAD(r20,campo_bits)
+LEA(r20,campo_bits)
 PUSH(r20)
 
 bsr PoneBitA1
@@ -903,7 +910,7 @@ TPB7: PUSH(r1)
 
 LOAD(r20,n_bit32)
 PUSH(r20)
-LOAD(r20,campo_bits)
+LEA(r20,campo_bits)
 PUSH(r20)
 
 bsr PoneBitA1
@@ -913,7 +920,7 @@ POP(r20)
 
 LOAD(r20,n_bit44)
 PUSH(r20)
-LOAD(r20,campo_bits)
+LEA(r20,campo_bits)
 PUSH(r20)
 
 bsr PoneBitA1
@@ -929,7 +936,7 @@ TPB8: PUSH(r1)
 
 LOAD(r20,n_bit122)
 PUSH(r20)
-LOAD(r20,campo_bits)
+LEA(r20,campo_bits)
 PUSH(r20)
 
 bsr PoneBitA1
@@ -940,6 +947,55 @@ POP(r20)
 
 POP(r1)
 jmp(r1)
+
+TPB9: PUSH(r1)
+
+LOAD(r20,n_bit32)
+PUSH(r20)
+LEA(r20,campo_bits)
+PUSH(r20)
+
+bsr PoneBitA1
+
+POP(r20)
+POP(r20)
+
+LOAD(r20,n_bit44)
+PUSH(r20)
+LEA(r20,campo_bits)
+PUSH(r20)
+
+bsr PoneBitA1
+
+POP(r20)
+POP(r20)
+
+
+
+LOAD(r20,n_bit122)
+PUSH(r20)
+LEA(r20,campo_bits)
+PUSH(r20)
+
+bsr PoneBitA1
+
+POP(r20)
+POP(r20)
+
+LOAD(r20,n_bit44)
+PUSH(r20)
+LEA(r20,campo_bits)
+PUSH(r20)
+
+bsr PoneBitA1
+
+POP(r20)
+POP(r20)
+
+
+POP(r1)
+jmp(r1)
+
 
 
 org 7000 ;-------------PROGRAMA--------------
@@ -977,7 +1033,7 @@ PUSH(r1)
 
 
 
-bsr TPB8
+bsr TPB9
 
 
 POP(r1)
