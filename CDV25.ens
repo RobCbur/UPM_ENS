@@ -104,6 +104,23 @@ palabra_longcad3: data "0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF01234567
 
 res 16
 
+n_bit0: data 0
+
+n_bit1: data 1
+
+n_bibt4: data 4
+
+n_bibt8: data 8
+
+n_bit32: data 32
+
+n_bit44: data 44
+
+n_bit122: data 122
+
+campo_bits: data 0x12000
+
+
 
 
 
@@ -511,53 +528,56 @@ jmp(r1)
 org 5000
 
 TLONGCA1:PUSH(r1) ; 0x10
-LEA(r3, palabra_loncad1)
-PUSH(r3)
-LEA(r3, LongCad)
-jsr(r3)
-POP(r3)
+LEA(r20, palabra_loncad1)
+PUSH(r20)
+
+bsr LongCad
+
+POP(r20)
 POP(r1)
 jmp(r1)
 
 
 TLONGCA2:PUSH(r1) ;0x 00
-LEA(r3, palabra_longad2)
-PUSH(r3)
-LEA(r3, LongCad)
-jsr(r3)
-POP(r3)
+LEA(r20, palabra_longad2)
+PUSH(r20)
+
+bsr LongCad
+
+POP(r20)
 POP(r1)
 jmp(r1)
 
 
 TLONGCA3:PUSH(r1) ;0x 01 00
-LEA(r3, palabra_longcad3)
-PUSH(r3)
-LEA(r3, LongCad)
-jsr(r3)
-POP(r3)
+LEA(r20, palabra_longcad3)
+PUSH(r20)
+
+bsr LongCad
+
+
+POP(r20)
 POP(r1)
 jmp(r1)
 
 
 
 TBUSCCAR1:PUSH(r1) ; 0x00
-LOAD(r3,c_buscacar1)
-PUSH(r3) 
-LEA(r3,palabra_buscacar)
-PUSH(r3) 
-LOAD(r3,from_buscacar1)
-PUSH(r3) 
-LOAD(r3,to_buscacar1)
-PUSH(r3) 
-LEA(r3, BuscaCar)
+LOAD(r20,c_buscacar1)
+PUSH(r20) 
+LEA(r20,palabra_buscacar)
+PUSH(r20) 
+LOAD(r20,from_buscacar1)
+PUSH(r20) 
+LOAD(r20,to_buscacar1)
+PUSH(r20) 
 
-jsr(r3)
+bsr BuscaCar
 
-POP(r3)
-POP(r3)
-POP(r3)
-POP(r3)
+POP(r20)
+POP(r20)
+POP(r20)
+POP(r20)
 POP(r1)
 jmp(r1)
 
@@ -566,22 +586,21 @@ jmp(r1)
 
 
 TBUSCCAR2:PUSH(r1) ;0x4
- LOAD(r3,c_buscacar1)
-PUSH(r3) 
-LEA(r3,palabra_buscacar)
-PUSH(r3) 
-LOAD(r3,from_buscacar2)
-PUSH(r3) 
-LOAD(r3,to_buscacar2)
-PUSH(r3) 
-LEA(r3, BuscaCar)
+ LOAD(r20,c_buscacar1)
+PUSH(r20) 
+LEA(r20,palabra_buscacar)
+PUSH(r20) 
+LOAD(r20,from_buscacar2)
+PUSH(r20) 
+LOAD(r20,to_buscacar2)
+PUSH(r20) 
 
-jsr(r3)
+bsr BuscaCar
 
-POP(r3)
-POP(r3)
-POP(r3)
-POP(r3)
+POP(r20)
+POP(r20)
+POP(r20)
+POP(r20)
 POP(r1)
 
 jmp(r1)
@@ -590,111 +609,106 @@ jmp(r1)
 
 
 TBUSCCAR3:PUSH(r1) ;0xA
- LOAD(r3,c_buscacar2)
-PUSH(r3) 
-LEA(r3,palabra_buscacar)
-PUSH(r3) 
-LOAD(r3,from_buscacar1)
-PUSH(r3) 
-LOAD(r3,to_buscacar1)
-PUSH(r3) 
+ LOAD(r20,c_buscacar2)
+PUSH(r20) 
+LEA(r20,palabra_buscacar)
+PUSH(r20) 
+LOAD(r20,from_buscacar1)
+PUSH(r20) 
+LOAD(r20,to_buscacar1)
+PUSH(r20) 
 
-LEA(r3, BuscaCar)
 
-jsr(r3)
+bsr BuscaCar
 
-POP(r3)
-POP(r3)
-POP(r3)
-POP(r3)
+POP(r20)
+POP(r20)
+POP(r20)
+POP(r20)
 POP(r1)
 
 jmp(r1)
 
 TBUSCCAR4:PUSH(r1) ;0xA
- LOAD(r3,c_buscacar3)
-PUSH(r3) 
-LEA(r3,plabra_buscacar2)
-PUSH(r3) 
-LOAD(r3,from_buscacar1)
-PUSH(r3) 
-LOAD(r3,to_buscacar1)
-PUSH(r3) 
+ LOAD(r20,c_buscacar3)
+PUSH(r20) 
+LEA(r20,plabra_buscacar2)
+PUSH(r20) 
+LOAD(r20,from_buscacar1)
+PUSH(r20) 
+LOAD(r20,to_buscacar1)
+PUSH(r20) 
 
-LEA(r3, BuscaCar)
 
-jsr(r3)
+bsr BuscaCar
 
-POP(r3)
-POP(r3)
-POP(r3)
-POP(r3)
+POP(r20)
+POP(r20)
+POP(r20)
+POP(r20)
 POP(r1)
 
 jmp(r1)
 
 TBUSCCAR5:PUSH(r1) ;0xA
- LOAD(r3,c_buscacar1)
-PUSH(r3) 
-LEA(r3,plabra_buscacar)
-PUSH(r3) 
-LOAD(r3,from_buscacar3)
-PUSH(r3) 
-LOAD(r3,to_buscacar3)
-PUSH(r3) 
+ LOAD(r20,c_buscacar1)
+PUSH(r20) 
+LEA(r20,plabra_buscacar)
+PUSH(r20) 
+LOAD(r20,from_buscacar3)
+PUSH(r20) 
+LOAD(r20,to_buscacar3)
+PUSH(r20) 
 
-LEA(r3, BuscaCar)
 
-jsr(r3)
+bsr BuscaCar
 
-POP(r3)
-POP(r3)
-POP(r3)
-POP(r3)
+POP(r20)
+POP(r20)
+POP(r20)
+POP(r20)
 POP(r1)
 
 jmp(r1)
 
 TBUSCCAR6:PUSH(r1) ;0xA
- LOAD(r3,c_buscacar4)
-PUSH(r3) 
-LEA(r3,plabra_buscacar)
-PUSH(r3) 
-LOAD(r3,from_buscacar4)
-PUSH(r3) 
-LOAD(r3,to_buscacar4)
-PUSH(r3) 
+ LOAD(r20,c_buscacar4)
+PUSH(r20) 
+LEA(r20,plabra_buscacar)
+PUSH(r20) 
+LOAD(r20,from_buscacar4)
+PUSH(r20) 
+LOAD(r20,to_buscacar4)
+PUSH(r20) 
 
-LEA(r3, BuscaCar)
 
-jsr(r3)
+bsr BuscaCar
 
-POP(r3)
-POP(r3)
-POP(r3)
-POP(r3)
+POP(r20)
+POP(r20)
+POP(r20)
+POP(r20)
 POP(r1)
 
 jmp(r1)
 
 TBUSCCAR7:PUSH(r1) ;0xA
- LOAD(r3,c_buscacar5)
-PUSH(r3) 
-LEA(r3,palabra_busca3)
-PUSH(r3) 
-LOAD(r3,from_buscacar1)
-PUSH(r3) 
-LOAD(r3,to_buscacar1)
-PUSH(r3) 
+ LOAD(r20,c_buscacar5)
+PUSH(r20) 
+LEA(r20,palabra_busca3)
+PUSH(r20) 
+LOAD(r20,from_buscacar1)
+PUSH(r20) 
+LOAD(r20,to_buscacar1)
+PUSH(r20) 
 
-LEA(r3, BuscaCar)
 
-jsr(r3)
+bsr BuscaCar
 
-POP(r3)
-POP(r3)
-POP(r3)
-POP(r3)
+POP(r20)
+POP(r20)
+POP(r20)
+POP(r20)
 POP(r1)
 
 jmp(r1)
@@ -703,30 +717,30 @@ jmp(r1)
 
 
 TCC1: PUSH(r1);0x06
-LEA(r3,palabra_coincidencad1)
-PUSH(r3) 
-LEA(r3,palabra_coincidencad1)
-PUSH(r3) 
-LEA(r3,CoincidenCad)
+LEA(r20,palabra_coincidencad1)
+PUSH(r20) 
+LEA(r20,palabra_coincidencad1)
+PUSH(r20) 
 
-jsr(r3)
-POP(r3)
-POP(r3)
+bsr CoincidenCad
+
+POP(r20)
+POP(r20)
 POP(r1)
 
 jmp(r1)
 
 
 TCC2:PUSH(r1) ;0x00
-LEA(r3,palabra_coincidencad1)
-PUSH(r3) 
-LEA(r3,palabra_coincad2)
-PUSH(r3) 
-LEA(r3,CoincidenCad)
+LEA(r20,palabra_coincidencad1)
+PUSH(r20) 
+LEA(r20,palabra_coincad2)
+PUSH(r20) 
 
-jsr(r3)
-POP(r3)
-POP(r3)
+bsr CoincidenCad
+
+POP(r20)
+POP(r20)
 POP(r1)
 
 jmp(r1)
@@ -734,17 +748,61 @@ jmp(r1)
 
 
 TCC3:PUSH(r1) ;0x05
-LEA(r3,palabra_coincidencad1)
-PUSH(r3) 
-LEA(r3,palabra_coinc3)
-PUSH(r3) 
-LEA(r3,CoincidenCad)
+LEA(r20,palabra_coincidencad1)
+PUSH(r20) 
+LEA(r20,palabra_coinc3)
+PUSH(r20) 
 
-jsr(r3)
-POP(r3)
-POP(r3)
+bsr CoincidenCad
+
+POP(r20)
+POP(r20)
 POP(r1)
 
+jmp(r1)
+
+
+TPB1: PUSH(r1)
+
+LOAD(r20,n_bit0)
+PUSH(r20)
+LOAD(r20,campo_bits)
+PUSH(r20)
+
+bsr PoneBitA1
+
+POP(r20)
+POP(r20)
+
+
+POP(r1)
+jmp(r1)
+
+
+TPB2: PUSH(r1)
+
+LOAD(r20,n_bit0)
+PUSH(r20)
+LOAD(r20,campo_bits)
+PUSH(r20)
+
+bsr PoneBitA1
+
+POP(r20)
+POP(r20)
+
+LOAD(r20,n_bit1)
+PUSH(r20)
+LOAD(r20,campo_bits)
+PUSH(r20)
+
+bsr PoneBitA1
+
+POP(r20)
+POP(r20)
+
+
+POP(r1)
 jmp(r1)
 
 
@@ -777,18 +835,19 @@ or r21, r0,21
 or r22, r0,22
 or r23, r0,23
 
-PUSH(r3)
-PUSH(r1)
-
 BREAK:
 
-bsr TBUSCCAR4
+PUSH(r20)
+PUSH(r1)
+
+
+
+bsr TPB2
 
 POP(r1)
-POP(r3)
+POP(r20)
 
 
-;BREAK: or r5, r5, r5
 
 
 
