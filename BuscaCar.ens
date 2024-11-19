@@ -1,4 +1,143 @@
-org 1024
+org 496 ; ------------------------VARIABLES TEST-----------------------------
+
+r30_inicio: data 86000
+
+res 12
+
+palabra_loncad1: data "abzxqwyunl" ; size 10 (A)
+
+ res 12
+
+palabra_longad2: data 0x00; 0
+
+res 4
+
+
+
+palabra_buscacar: data "*qwe*rt--y\0"
+
+res 4
+
+plabra_buscacar2: data 0x6577712A ,0x2D74722A , 0x00A02D
+
+res 4
+
+;palabra_buscacar3: data "*aze*rt--y\0"
+
+palabra_busca3: data "a*ze*rt--y\0"
+
+
+res 4
+
+palabra_coincidencad1:data "qwerty"
+
+res 8
+
+palabra_coincad2:data "azerty" 
+
+res 8
+
+palabra_coinc3:data "qwerti"
+
+res 8
+;;;;;;;;;;;;;;;;;;;;;;;
+c_buscacar1: data "*"
+
+res 12
+
+c_buscacar2: data "|"
+
+res 12
+
+c_buscacar3: data 0xA0
+
+res 12
+c_buscacar4: data "y"
+
+res 12
+
+c_buscacar5: data "a"
+
+res 12
+;;;;;;;;;;;;;;;;;;;;;;;;;
+
+from_buscacar1: data 0
+
+res 12
+
+to_buscacar1: data 10
+
+res 12
+;;;;;;;;;;;;;;;;
+
+from_buscacar2:data 3
+
+res 12
+
+to_buscacar2: data 10
+
+res 12
+
+;;;;;;;;;;;;;;;;;;;;
+from_buscacar3:data 5
+
+res 12
+
+to_buscacar3: data 5
+
+res 12
+
+;;;;;;;;;;;;;;;;;;;;;
+
+from_buscacar4:data 0
+
+res 12
+
+to_buscacar4: data 7
+
+res 12
+
+
+
+
+
+
+palabra_longcad3: data "0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF" ;0x100
+
+res 16
+
+n_bit0: data 0
+
+n_bit1: data 1
+
+n_bit2: data 2
+
+
+n_bit4: data 4
+
+n_bit7: data 7
+
+
+n_bit8: data 8
+
+n_bit32: data 32
+
+n_bit44: data 44
+
+n_bit122: data 122
+
+res 12
+
+
+campo_bits: data 0x00
+
+res  28
+
+
+
+
+
+org 2048
 
 DBNZ: MACRO (ra,eti)
     sub ra,ra,1
@@ -35,59 +174,255 @@ C: data "e"
 from: data 4
 to: data 13
 
-org 4000
-BuscaCar:PUSH(r1) ;direccion de retorno ; r31, 32
-
-PUSH(r31) ; antiguo r31 ; r31, 28
-PUSH(r3) ; r3 = contador ; r31, 24
-PUSH(r11) ; puntero ; r31, 20
-PUSH(r4) ;cmp / temp ; r31, 16
-PUSH(r6) ;tmp ; r31, 12
-PUSH(r5) ;contiene C; r31, 08
-PUSH(r12) ;contiene bit de palabra ; r31, 04
-PUSH(r7) ; r31, 0
-
-xor r7,r7,r7
-xor r5, r5, r5
-xor r3,r3,r3
-xor r11,r11,r11
-xor r4,r4,r4
-xor r12,r12,r12
 
 
-or r31, r30 ,0 ;marco de pila
+org 5000
 
-ld r5, r31, 48
-ld r11, r31, 44
-ld r4, r31 , 40
-ld r6, r31, 36
-subu r7 , r6,r4
-addu r11, r11, r4 
+
+TBUSCCAR1:PUSH(r1) ; 0x00
+LOAD(r20,to_buscacar1)
+PUSH(r20) 
+LOAD(r20,from_buscacar1)
+PUSH(r20) 
+LEA(r20,palabra_buscacar)
+PUSH(r20) 
+LOAD(r20,c_buscacar1)
+PUSH(r20) 
+
+
+bsr BuscaCar
+
+POP(r20)
+POP(r20)
+POP(r20)
+POP(r20)
+POP(r1)
+jmp(r1)
+
+
+
+
+
+TBUSCCAR2:PUSH(r1) ;0x4
+
+LOAD(r20,to_buscacar2)
+PUSH(r20) 
+LOAD(r20,from_buscacar2)
+PUSH(r20) 
+LEA(r20,palabra_buscacar)
+PUSH(r20) 
+LOAD(r20,c_buscacar1)
+PUSH(r20) 
+
+
+
+bsr BuscaCar
+
+POP(r20)
+POP(r20)
+POP(r20)
+POP(r20)
+POP(r1)
+
+jmp(r1)
+
+
+
+
+TBUSCCAR3:PUSH(r1) ;0xA
+
+LOAD(r20,to_buscacar1)
+PUSH(r20) 
+LOAD(r20,from_buscacar1)
+PUSH(r20) 
+
+
+LEA(r20,palabra_buscacar)
+PUSH(r20) 
+LOAD(r20,c_buscacar2)
+PUSH(r20) 
+
+
+bsr BuscaCar
+
+POP(r20)
+POP(r20)
+POP(r20)
+POP(r20)
+POP(r1)
+
+jmp(r1)
+
+TBUSCCAR4:PUSH(r1) ;0xA
+
+LOAD(r20,to_buscacar1)
+PUSH(r20) 
+LOAD(r20,from_buscacar1)
+PUSH(r20) 
+LEA(r20,plabra_buscacar2)
+PUSH(r20) 
+ LOAD(r20,c_buscacar3)
+PUSH(r20) 
+
+
+bsr BuscaCar
+
+POP(r20)
+POP(r20)
+POP(r20)
+POP(r20)
+POP(r1)
+
+jmp(r1)
+
+TBUSCCAR5:PUSH(r1) ;0xA
+
+LOAD(r20,to_buscacar3)
+PUSH(r20) 
+
+LOAD(r20,from_buscacar3)
+PUSH(r20) 
+
+LEA(r20,plabra_buscacar)
+PUSH(r20)
+ LOAD(r20,c_buscacar1)
+PUSH(r20) 
  
 
-subu r11,r11,1     ;r11 = puntero cadena
-subu r3,r3, 1   ;r3 = contador
+bsr BuscaCar
+
+POP(r20)
+POP(r20)
+POP(r20)
+POP(r20)
+POP(r1)
+
+jmp(r1)
+
+TBUSCCAR6:PUSH(r1) ;0xA
 
 
-addu r3,r3,1          
-addu r11,r11,1 ;bucle
+LOAD(r20,to_buscacar4)
+PUSH(r20) 
+LOAD(r20,from_buscacar4)
+PUSH(r20) 
 
-ld.bu r12, r11, 0        ; r12 = una palabra de la cadena
-cmp r4 , r12 , r5
-cmp r6 , r12 ,r0
-or r4,r6,r4
-cmp r6, r7, r3
-or r4,r4,r6
-bb0 2,r4, -8
+LEA(r20,plabra_buscacar)
+PUSH(r20) 
+ LOAD(r20,c_buscacar4)
+PUSH(r20) 
+
+
+
+
+bsr BuscaCar
+
+POP(r20)
+POP(r20)
+POP(r20)
+POP(r20)
+POP(r1)
+
+jmp(r1)
+
+TBUSCCAR7:PUSH(r1) ;0xA
+
+
+LOAD(r20,to_buscacar1)
+PUSH(r20) 
+
+LOAD(r20,from_buscacar1)
+PUSH(r20) 
+
+LEA(r20,palabra_busca3)
+PUSH(r20) 
+ LOAD(r20,c_buscacar5)
+PUSH(r20) 
+
+
+
+
+bsr BuscaCar
+
+POP(r20)
+POP(r20)
+POP(r20)
+POP(r20)
+POP(r1)
+
+jmp(r1)
+
+
+
+org 4000
+BuscaCar:
+
+PUSH(r1)            ; Guarda dirección de retorno en la pila
+PUSH(r31)           ; Guarda el marco de pila anterior
+PUSH(r3)            ; Guarda r3 (contador de coincidencias)
+PUSH(r11)           ; Guarda r11 (puntero de la cadena)
+PUSH(r4)            ; Guarda r4 (registro de comparación)
+PUSH(r6)            ; Guarda r6 (registro temporal para tamaño)
+PUSH(r5)            ; Guarda r5 (carácter a buscar)
+PUSH(r12)           ; Guarda r12 (temporal para cargar caracteres)
+PUSH(r7)            ; Guarda r7 (temporal para controlar el final)
+
+; Inicializa los registros necesarios para la búsqueda
+xor r7, r7, r7      ; Inicializa r7 a 0 (usado para comparación de tamaño)
+xor r5, r5, r5      ; Inicializa r5 a 0 (carácter a buscar)
+xor r3, r3, r3      ; Inicializa r3 a 0 (contador de ocurrencias)
+xor r11, r11, r11   ; Inicializa r11 a 0 (puntero de la cadena)
+xor r4, r4, r4      ; Inicializa r4 a 0 (registro temporal para comparación)
+xor r12, r12, r12   ; Inicializa r12 a 0 (registro temporal para el carácter actual)
+
+or r31, r30, 0      ; Guarda el marco actual de pila en r31
+
+ld r5, r31, 36      ; Carga en r5 el carácter a buscar
+ld r11, r31, 40    ; Carga en r11 la dirección de inicio de la cadena
+ld r4, r31, 44      ; Carga en r4 y r3 el from
+ld r3, r31, 44
+ld r7, r31, 48      ; Carga en r7 el to
+
+addu r11, r11, r4   ; Ajusta el puntero r11 para empezar a recorrer la cadena 
+
+
+; Configura r3 y r11 para el inicio de la búsqueda
+subu r11, r11, 1    ; Mueve el puntero r11 una posición hacia atrás
+subu r3, r3, 1      ; Configura el contador en r3
+
+
+; Bucle para recorrer cada carácter de la cadena
+buc: addu r3, r3, 1      ; Incrementa el contador de ocurrencias
+addu r11, r11, 1    ; Avanza el puntero de la cadena
+
+ld.bu r12, r11, 0   ; Carga el carácter actual de la cadena en r12
+
+cmp r4, r7, r3 
+
+bb1 2, r4,fin_nenc
+
+cmp r4, r12, r0     ; Compara r12 con 0 para ver si es el final de la cadena
+
+bb1 2, r4,fin_nenc
+
+cmp r4, r12, r5     ; Compara r12 (carácter actual) con r5 (carácter buscado)
+
+bb0 2, r4, buc
+
+
+or r29, r3, r0      ; Guarda el total de coincidencias en r29
+
+br exit
+
+fin_nenc:
       
+or r29, r7, r0      ; Guarda el total de coincidencias en r29
 
+exit:
 
+or r30, r31, 0      ; Restaura el marco de pila
 
-or r29, r3, r0  
-ld r4, r31 , 40        ; r3 a r29 
-addu r29,r29, r4  
-or r30 , r31, r0
-
+; Restaura los registros y vuelve
 POP(r7)
 POP(r12)
 POP(r5)
@@ -96,35 +431,57 @@ POP(r4)
 POP(r11)
 POP(r3)
 POP(r31)
+
 POP(r1)
 jmp(r1)
 
-org 5000
+
+
+org 8000
 
 START:
 
-addu r30, r30, 204
-
-LOAD(r3,C)
-PUSH(r3) ; r31, 48
-LEA(r3,ref)
-PUSH(r3) ; r31, 44
-LOAD(r3,from)
-PUSH(r3) ; r31, 40
-LOAD(r3,to)
-PUSH(r3) ; r31, 36
-
-LEA(r3, BuscaCar)
-
-addu r4,r0,0x0A
-addu r11,r0,0x0B
-addu r12,r0,0x0C
-
-jsr(r3)
-
-POP(r3)
+LOAD(r30, r30_inicio)
 
 
+or r4 ,r0,4
+or r5 ,r0,5
+or r6, r0,6
+or r7, r0,7
+or r8 ,r0,8
+or r9, r0,9
+or r10, r0,10
+or r11, r0,11
+or r12 ,r0,12
+or r13 ,r0,13
+or r14, r0,14
+or r15, r0,15
+or r16 ,r0,16
+or r17 ,r0,17
+or r18, r0,18
+or r19, r0,19
+or r20 ,r0,20
+or r21, r0,21
+or r22, r0,22
+or r23, r0,23
 
-add r0, r4 ,0xf0
+
+
+
+BREAK:
+
+
+PUSH(r20)
+PUSH(r1)
+
+
+
+
+bsr TBUSCCAR7
+
+
+
+
+POP(r1)
+POP(r20)
 

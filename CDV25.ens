@@ -254,11 +254,12 @@ xor r12, r12, r12   ; Inicializa r12 a 0 (registro temporal para el carácter ac
 
 or r31, r30, 0      ; Guarda el marco actual de pila en r31
 
-ld r5, r31, 48      ; Carga en r5 el carácter a buscar
-ld r11, r31, 44     ; Carga en r11 la dirección de inicio de la cadena
-ld r4, r31, 40      ; Carga en r4 el tamaño de la cadena
-ld r6, r31, 36      ; Carga en r6 el límite de búsqueda
-subu r7, r6, r4     ; Calcula r7 como límite de búsqueda menos el tamaño
+ld r5, r31, 36      ; Carga en r5 el carácter a buscar
+ld r11, r31, 40    ; Carga en r11 la dirección de inicio de la cadena
+ld r4, r31, 44      ; Carga en r4 y r3 el from
+ld r3, r31, 44
+ld r7, r31, 48      ; Carga en r7 el to
+
 addu r11, r11, r4   ; Ajusta el puntero r11 para empezar a recorrer la cadena 
 
 
@@ -268,23 +269,33 @@ subu r3, r3, 1      ; Configura el contador en r3
 
 
 ; Bucle para recorrer cada carácter de la cadena
-addu r3, r3, 1      ; Incrementa el contador de ocurrencias
+buc: addu r3, r3, 1      ; Incrementa el contador de ocurrencias
 addu r11, r11, 1    ; Avanza el puntero de la cadena
 
 ld.bu r12, r11, 0   ; Carga el carácter actual de la cadena en r12
-cmp r4, r12, r5     ; Compara r12 (carácter actual) con r5 (carácter buscado)
-cmp r6, r12, r0     ; Compara r12 con 0 para ver si es el final de la cadena
-or r4, r6, r4       ; Almacena el resultado de comparación en r4
-cmp r6, r7, r3      ; Compara el contador con el límite de búsqueda
-or r4, r4, r6       ; Actualiza r4 para detenerse si se llega al límite
-bb0 2, r4, -8       ; Si r4 indica coincidencia o fin, termina el bucle
-      
 
+cmp r4, r7, r3 
+
+bb1 2, r4,fin_nenc
+
+cmp r4, r12, r0     ; Compara r12 con 0 para ver si es el final de la cadena
+
+bb1 2, r4,fin_nenc
+
+cmp r4, r12, r5     ; Compara r12 (carácter actual) con r5 (carácter buscado)
+
+bb0 2, r4, buc
 
 
 or r29, r3, r0      ; Guarda el total de coincidencias en r29
-ld r4, r31, 40      ; Restaura r4 desde la pila
-addu r29, r29, r4   ; Agrega el tamaño de la cadena a r29 si es necesario
+
+br exit
+
+fin_nenc:
+      
+or r29, r7, r0      ; Guarda el total de coincidencias en r29
+
+exit:
 
 or r30, r31, 0      ; Restaura el marco de pila
 
@@ -300,6 +311,7 @@ POP(r31)
 
 POP(r1)
 jmp(r1)
+
 
 
 CoincidenCad:  ;31,32
@@ -471,7 +483,7 @@ PUSH(r5)
 PUSH(r6)
 PUSH(r7)
 PUSH(r8)
-
+PUSH(r31)
 
 
 xor r21, r21, r21
@@ -483,9 +495,9 @@ xor r8,r8,r8
 
 or r31, r30, 0
 
-ld r20, r31, 28 ; guarda en r20 dir inicio
+ld r20, r31, 32 ; guarda en r20 dir inicio
 or r21, r0, 7 ; guarda en r21 num 7
-ld r5, r31, 32; guarda en r5 n_bit
+ld r5, r31, 36; guarda en r5 n_bit
 
 
 divu r6 , r5, 8 ;  pon en r6 el byte en l q hay q escribir
@@ -507,7 +519,7 @@ st.b r7, r20 , r6 ; guarda el byte cambiado a memoria
 
 or r30, r31, 0
 
-
+POP(r31)
 POP(r8)
 POP(r7)
 POP(r6)
@@ -534,6 +546,7 @@ PUSH(r5)
 PUSH(r6)
 PUSH(r7)
 PUSH(r8)
+PUSH(r31)
 
 
 
@@ -546,9 +559,9 @@ xor r8,r8,r8
 
 or r31, r30, 0
 
-ld r20, r31, 28 ; guarda en r20 dir inicio
+ld r20, r31, 32 ; guarda en r20 dir inicio
 or r21, r0, 7 ; guarda en r21 num 7
-ld r5, r31, 32; guarda en r5 n_bit
+ld r5, r31, 36; guarda en r5 n_bit
 
 
 divu r6 , r5, 8 ;  pon en r6 el byte en l q hay q leer
@@ -568,7 +581,7 @@ extu r29, r7 ,r8 ; pone a 1 un campo de bits de longitud 1 y de desplazamiento r
 
 or r30, r31, 0
 
-
+POP(r31)
 POP(r8)
 POP(r7)
 POP(r6)
