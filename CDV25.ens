@@ -657,7 +657,7 @@ PUSH(r21)
 PUSH(r22)
 PUSH(r23)
 PUSH(r24)
-
+PUSH(r26)
 
 
 
@@ -665,10 +665,10 @@ or r31, r30, 0
 
 
 
-ld r20,r31,84;texto
-ld r19, r31,80 ;comprimido
+ld r20,r31,88;texto
+ld r19, r31,84 ;comprimido
 xor r9,r9,r9
-
+xor r26,r26,r26
 addu r22,r19,5 ; inicio campo de bits
 
 PUSH(r20)
@@ -716,6 +716,7 @@ ld.bu r21,r20,r13 ;cargar caracter
 st.b r21,r11,r0
 addu r11,r11,1
 addu r13,r13,1
+addu r26,r26,1
 
 DBNZ(r8,BUC_Comp)
 
@@ -747,6 +748,7 @@ PUSH(r14)
 PUSH(r27)
 PUSH(r28)
 PUSH(r24)
+PUSH(r26)
 
 ;LEA(r9,jj_buscamax)
 
@@ -763,6 +765,7 @@ POP(r20)
 POP(r13)
 POP(r9)
 
+POP(r26)
 POP(r24)
 
 POP(r28)
@@ -793,6 +796,7 @@ st.b r21,r11,r0
 addu r11,r11,1
 addu r13,r13,1
 addu r12,r12,1
+addu r26,r26,1
 
 br fin_compresion
 
@@ -828,6 +832,7 @@ st.b r29,r11,r0
 addu r11,r11,1
 addu r13,r13,r29
 addu r12,r12,1
+addu r26,r26,3
 
 fin_compresion:
 
@@ -857,6 +862,8 @@ addu r14,r14,1
 addu r17,r14,5
 
 
+
+addu r29,r17,r26
 
 
 
@@ -888,6 +895,8 @@ bb0 eq,r4,-5
 
 
 or r30, r31, 0
+
+POP(r26)
 
 POP(r24)
 POP(r23)
@@ -929,740 +938,740 @@ jmp(r1)
 org 10000
 
 
-TCOMPRIME1:PUSH(r1) ; 0x10
-LEA(r20, palabra_comp1)
-PUSH(r20)
-LEA(r20,comprimido_1)
-PUSH(r20)
+	TCOMPRIME1:PUSH(r1) ; 0x10
+	LEA(r20, palabra_comp1)
+	PUSH(r20)
+	LEA(r20,comprimido_1)
+	PUSH(r20)
 
-bsr Comprime
+	bsr Comprime
 
-POP(r20)
-POP(r20)
-POP(r1)
-jmp(r1)
+	POP(r20)
+	POP(r20)
+	POP(r1)
+	jmp(r1)
 
-TCOMPRIME2:PUSH(r1) ; 0x10
-LEA(r20, palabra_comp2)
-PUSH(r20)
-LEA(r20,comprimido_2)
-PUSH(r20)
+	TCOMPRIME2:PUSH(r1) ; 0x10
+	LEA(r20, palabra_comp2)
+	PUSH(r20)
+	LEA(r20,comprimido_2)
+	PUSH(r20)
 
-bsr Comprime
+	bsr Comprime
 
-POP(r20)
-POP(r20)
-POP(r1)
-jmp(r1)
+	POP(r20)
+	POP(r20)
+	POP(r1)
+	jmp(r1)
 
-TCOMPRIME3:PUSH(r1) ; 0x10
-LEA(r20, palabra_comp3)
-PUSH(r20)
-LEA(r20,comprimido_3)
-PUSH(r20)
+	TCOMPRIME3:PUSH(r1) ; 0x10
+	LEA(r20, palabra_comp3)
+	PUSH(r20)
+	LEA(r20,comprimido_3)
+	PUSH(r20)
 
-bsr Comprime
+	bsr Comprime
 
-POP(r20)
-POP(r20)
-POP(r1)
-jmp(r1)
+	POP(r20)
+	POP(r20)
+	POP(r1)
+	jmp(r1)
 
 
-TCOMPRIME4:PUSH(r1) ; 0x10
-LEA(r20, palabra_comp4)
-PUSH(r20)
-LEA(r20,comprimido_4)
-PUSH(r20)
+	TCOMPRIME4:PUSH(r1) ; 0x10
+	LEA(r20, palabra_comp4)
+	PUSH(r20)
+	LEA(r20,comprimido_4)
+	PUSH(r20)
 
-bsr Comprime
+	bsr Comprime
 
-POP(r20)
-POP(r20)
-POP(r1)
-jmp(r1)
+	POP(r20)
+	POP(r20)
+	POP(r1)
+	jmp(r1)
 
 
-TCOMPRIME5:PUSH(r1) ; 0x10
-LEA(r20, palabra_comp5)
-PUSH(r20)
-LEA(r20,comprimido_5)
-PUSH(r20)
+	TCOMPRIME5:PUSH(r1) ; 0x10
+	LEA(r20, palabra_comp5)
+	PUSH(r20)
+	LEA(r20,comprimido_5)
+	PUSH(r20)
 
-bsr Comprime
+	bsr Comprime
 
-POP(r20)
-POP(r20)
-POP(r1)
-jmp(r1)
+	POP(r20)
+	POP(r20)
+	POP(r1)
+	jmp(r1)
 
 
-TCOMPRIME6:PUSH(r1) ; 0x10
-LEA(r20, palabra_comp6)
-PUSH(r20)
-LEA(r20,comprimido_6)
-PUSH(r20)
+	TCOMPRIME6:PUSH(r1) ; 0x10
+	LEA(r20, palabra_comp6)
+	PUSH(r20)
+	LEA(r20,comprimido_6)
+	PUSH(r20)
 
-bsr Comprime
+	bsr Comprime
 
-POP(r20)
-POP(r20)
-POP(r1)
-jmp(r1)
+	POP(r20)
+	POP(r20)
+	POP(r1)
+	jmp(r1)
 
 
 
 
 
-TLONGCA1:PUSH(r1) ; 0x10
-LEA(r20, palabra_loncad1)
-PUSH(r20)
+	TLONGCA1:PUSH(r1) ; 0x10
+	LEA(r20, palabra_loncad1)
+	PUSH(r20)
 
-bsr LongCad
+	bsr LongCad
 
-POP(r20)
-POP(r1)
-jmp(r1)
+	POP(r20)
+	POP(r1)
+	jmp(r1)
 
 
-TLONGCA2:PUSH(r1) ;0x 00
-LEA(r20, palabra_longad2)
-PUSH(r20)
+	TLONGCA2:PUSH(r1) ;0x 00
+	LEA(r20, palabra_longad2)
+	PUSH(r20)
 
-bsr LongCad
+	bsr LongCad
 
-POP(r20)
-POP(r1)
-jmp(r1)
+	POP(r20)
+	POP(r1)
+	jmp(r1)
 
 
-TLONGCA3:PUSH(r1) ;0x 01 00
-LEA(r20, palabra_longcad3)
-PUSH(r20)
+	TLONGCA3:PUSH(r1) ;0x 01 00
+	LEA(r20, palabra_longcad3)
+	PUSH(r20)
 
-bsr LongCad
+	bsr LongCad
 
 
-POP(r20)
-POP(r1)
-jmp(r1)
+	POP(r20)
+	POP(r1)
+	jmp(r1)
 
 
 
-TBUSCCAR1:PUSH(r1) ; 0x00
-LOAD(r20,c_buscacar1)
-PUSH(r20) 
-LEA(r20,palabra_buscacar)
-PUSH(r20) 
-LOAD(r20,from_buscacar1)
-PUSH(r20) 
-LOAD(r20,to_buscacar1)
-PUSH(r20) 
+	TBUSCCAR1:PUSH(r1) ; 0x00
+	LOAD(r20,c_buscacar1)
+	PUSH(r20) 
+	LEA(r20,palabra_buscacar)
+	PUSH(r20) 
+	LOAD(r20,from_buscacar1)
+	PUSH(r20) 
+	LOAD(r20,to_buscacar1)
+	PUSH(r20) 
 
-bsr BuscaCar
+	bsr BuscaCar
 
-POP(r20)
-POP(r20)
-POP(r20)
-POP(r20)
-POP(r1)
-jmp(r1)
+	POP(r20)
+	POP(r20)
+	POP(r20)
+	POP(r20)
+	POP(r1)
+	jmp(r1)
 
 
 
 
 
-TBUSCCAR2:PUSH(r1) ;0x4
- LOAD(r20,c_buscacar1)
-PUSH(r20) 
-LEA(r20,palabra_buscacar)
-PUSH(r20) 
-LOAD(r20,from_buscacar2)
-PUSH(r20) 
-LOAD(r20,to_buscacar2)
-PUSH(r20) 
+	TBUSCCAR2:PUSH(r1) ;0x4
+	 LOAD(r20,c_buscacar1)
+	PUSH(r20) 
+	LEA(r20,palabra_buscacar)
+	PUSH(r20) 
+	LOAD(r20,from_buscacar2)
+	PUSH(r20) 
+	LOAD(r20,to_buscacar2)
+	PUSH(r20) 
 
-bsr BuscaCar
+	bsr BuscaCar
 
-POP(r20)
-POP(r20)
-POP(r20)
-POP(r20)
-POP(r1)
+	POP(r20)
+	POP(r20)
+	POP(r20)
+	POP(r20)
+	POP(r1)
 
-jmp(r1)
+	jmp(r1)
 
 
 
 
-TBUSCCAR3:PUSH(r1) ;0xA
- LOAD(r20,c_buscacar2)
-PUSH(r20) 
-LEA(r20,palabra_buscacar)
-PUSH(r20) 
-LOAD(r20,from_buscacar1)
-PUSH(r20) 
-LOAD(r20,to_buscacar1)
-PUSH(r20) 
+	TBUSCCAR3:PUSH(r1) ;0xA
+	 LOAD(r20,c_buscacar2)
+	PUSH(r20) 
+	LEA(r20,palabra_buscacar)
+	PUSH(r20) 
+	LOAD(r20,from_buscacar1)
+	PUSH(r20) 
+	LOAD(r20,to_buscacar1)
+	PUSH(r20) 
 
 
-bsr BuscaCar
+	bsr BuscaCar
 
-POP(r20)
-POP(r20)
-POP(r20)
-POP(r20)
-POP(r1)
+	POP(r20)
+	POP(r20)
+	POP(r20)
+	POP(r20)
+	POP(r1)
 
-jmp(r1)
+	jmp(r1)
 
-TBUSCCAR4:PUSH(r1) ;0xA
- LOAD(r20,c_buscacar3)
-PUSH(r20) 
-LEA(r20,plabra_buscacar2)
-PUSH(r20) 
-LOAD(r20,from_buscacar1)
-PUSH(r20) 
-LOAD(r20,to_buscacar1)
-PUSH(r20) 
+	TBUSCCAR4:PUSH(r1) ;0xA
+	 LOAD(r20,c_buscacar3)
+	PUSH(r20) 
+	LEA(r20,plabra_buscacar2)
+	PUSH(r20) 
+	LOAD(r20,from_buscacar1)
+	PUSH(r20) 
+	LOAD(r20,to_buscacar1)
+	PUSH(r20) 
 
 
-bsr BuscaCar
+	bsr BuscaCar
 
-POP(r20)
-POP(r20)
-POP(r20)
-POP(r20)
-POP(r1)
+	POP(r20)
+	POP(r20)
+	POP(r20)
+	POP(r20)
+	POP(r1)
 
-jmp(r1)
+	jmp(r1)
 
-TBUSCCAR5:PUSH(r1) ;0xA
- LOAD(r20,c_buscacar1)
-PUSH(r20) 
-LEA(r20,plabra_buscacar)
-PUSH(r20) 
-LOAD(r20,from_buscacar3)
-PUSH(r20) 
-LOAD(r20,to_buscacar3)
-PUSH(r20) 
+	TBUSCCAR5:PUSH(r1) ;0xA
+	 LOAD(r20,c_buscacar1)
+	PUSH(r20) 
+	LEA(r20,plabra_buscacar)
+	PUSH(r20) 
+	LOAD(r20,from_buscacar3)
+	PUSH(r20) 
+	LOAD(r20,to_buscacar3)
+	PUSH(r20) 
 
 
-bsr BuscaCar
+	bsr BuscaCar
 
-POP(r20)
-POP(r20)
-POP(r20)
-POP(r20)
-POP(r1)
+	POP(r20)
+	POP(r20)
+	POP(r20)
+	POP(r20)
+	POP(r1)
 
-jmp(r1)
+	jmp(r1)
 
-TBUSCCAR6:PUSH(r1) ;0xA
- LOAD(r20,c_buscacar4)
-PUSH(r20) 
-LEA(r20,plabra_buscacar)
-PUSH(r20) 
-LOAD(r20,from_buscacar4)
-PUSH(r20) 
-LOAD(r20,to_buscacar4)
-PUSH(r20) 
+	TBUSCCAR6:PUSH(r1) ;0xA
+	 LOAD(r20,c_buscacar4)
+	PUSH(r20) 
+	LEA(r20,plabra_buscacar)
+	PUSH(r20) 
+	LOAD(r20,from_buscacar4)
+	PUSH(r20) 
+	LOAD(r20,to_buscacar4)
+	PUSH(r20) 
 
 
-bsr BuscaCar
+	bsr BuscaCar
 
-POP(r20)
-POP(r20)
-POP(r20)
-POP(r20)
-POP(r1)
+	POP(r20)
+	POP(r20)
+	POP(r20)
+	POP(r20)
+	POP(r1)
 
-jmp(r1)
+	jmp(r1)
 
-TBUSCCAR7:PUSH(r1) ;0xA
- LOAD(r20,c_buscacar5)
-PUSH(r20) 
-LEA(r20,palabra_busca3)
-PUSH(r20) 
-LOAD(r20,from_buscacar1)
-PUSH(r20) 
-LOAD(r20,to_buscacar1)
-PUSH(r20) 
+	TBUSCCAR7:PUSH(r1) ;0xA
+	 LOAD(r20,c_buscacar5)
+	PUSH(r20) 
+	LEA(r20,palabra_busca3)
+	PUSH(r20) 
+	LOAD(r20,from_buscacar1)
+	PUSH(r20) 
+	LOAD(r20,to_buscacar1)
+	PUSH(r20) 
 
 
-bsr BuscaCar
+	bsr BuscaCar
 
-POP(r20)
-POP(r20)
-POP(r20)
-POP(r20)
-POP(r1)
+	POP(r20)
+	POP(r20)
+	POP(r20)
+	POP(r20)
+	POP(r1)
 
-jmp(r1)
+	jmp(r1)
 
 
 
 
-TCC1: PUSH(r1);0x06
-LEA(r20,palabra_coincidencad1)
-PUSH(r20) 
-LEA(r20,palabra_coincidencad1)
-PUSH(r20) 
+	TCC1: PUSH(r1);0x06
+	LEA(r20,palabra_coincidencad1)
+	PUSH(r20) 
+	LEA(r20,palabra_coincidencad1)
+	PUSH(r20) 
 
-bsr CoincidenCad
+	bsr CoincidenCad
 
-POP(r20)
-POP(r20)
-POP(r1)
+	POP(r20)
+	POP(r20)
+	POP(r1)
 
-jmp(r1)
+	jmp(r1)
 
 
-TCC2:PUSH(r1) ;0x00
-LEA(r20,palabra_coincidencad1)
-PUSH(r20) 
-LEA(r20,palabra_coincad2)
-PUSH(r20) 
+	TCC2:PUSH(r1) ;0x00
+	LEA(r20,palabra_coincidencad1)
+	PUSH(r20) 
+	LEA(r20,palabra_coincad2)
+	PUSH(r20) 
 
-bsr CoincidenCad
+	bsr CoincidenCad
 
-POP(r20)
-POP(r20)
-POP(r1)
+	POP(r20)
+	POP(r20)
+	POP(r1)
 
-jmp(r1)
+	jmp(r1)
 
 
 
-TCC3:PUSH(r1) ;0x05
-LEA(r20,palabra_coincidencad1)
-PUSH(r20) 
-LEA(r20,palabra_coinc3)
-PUSH(r20) 
+	TCC3:PUSH(r1) ;0x05
+	LEA(r20,palabra_coincidencad1)
+	PUSH(r20) 
+	LEA(r20,palabra_coinc3)
+	PUSH(r20) 
 
-bsr CoincidenCad
+	bsr CoincidenCad
 
-POP(r20)
-POP(r20)
-POP(r1)
+	POP(r20)
+	POP(r20)
+	POP(r1)
 
-jmp(r1)
+	jmp(r1)
 
 
-TPB1: PUSH(r1)
+	TPB1: PUSH(r1)
 
-LOAD(r20,n_bit0)
-PUSH(r20)
-LEA(r20,campo_bits)
-PUSH(r20)
+	LOAD(r20,n_bit0)
+	PUSH(r20)
+	LEA(r20,campo_bits)
+	PUSH(r20)
 
-bsr PoneBitA1
+	bsr PoneBitA1
 
-POP(r20)
-POP(r20)
+	POP(r20)
+	POP(r20)
 
 
-POP(r1)
-jmp(r1)
+	POP(r1)
+	jmp(r1)
 
 
-TPB2: PUSH(r1)
+	TPB2: PUSH(r1)
 
-LOAD(r20,n_bit0)
-PUSH(r20)
-LEA(r20,campo_bits)
-PUSH(r20)
+	LOAD(r20,n_bit0)
+	PUSH(r20)
+	LEA(r20,campo_bits)
+	PUSH(r20)
 
-bsr PoneBitA1
+	bsr PoneBitA1
 
-POP(r20)
-POP(r20)
+	POP(r20)
+	POP(r20)
 
-LOAD(r20,n_bit1)
-PUSH(r20)
-LEA(r20,campo_bits)
-PUSH(r20)
+	LOAD(r20,n_bit1)
+	PUSH(r20)
+	LEA(r20,campo_bits)
+	PUSH(r20)
 
-bsr PoneBitA1
+	bsr PoneBitA1
 
-POP(r20)
-POP(r20)
+	POP(r20)
+	POP(r20)
 
 
-POP(r1)
-jmp(r1)
+	POP(r1)
+	jmp(r1)
 
 
-TPB3: PUSH(r1)
+	TPB3: PUSH(r1)
 
-LOAD(r20,n_bit4)
-PUSH(r20)
-LEA(r20,campo_bits)
-PUSH(r20)
+	LOAD(r20,n_bit4)
+	PUSH(r20)
+	LEA(r20,campo_bits)
+	PUSH(r20)
 
-bsr PoneBitA1
+	bsr PoneBitA1
 
-POP(r20)
-POP(r20)
+	POP(r20)
+	POP(r20)
 
 
-POP(r1)
-jmp(r1)
+	POP(r1)
+	jmp(r1)
 
-TPB4: PUSH(r1)
+	TPB4: PUSH(r1)
 
-LOAD(r20,n_bit8)
-PUSH(r20)
-LEA(r20,campo_bits)
-PUSH(r20)
+	LOAD(r20,n_bit8)
+	PUSH(r20)
+	LEA(r20,campo_bits)
+	PUSH(r20)
 
-bsr PoneBitA1
+	bsr PoneBitA1
 
-POP(r20)
-POP(r20)
+	POP(r20)
+	POP(r20)
 
-LOAD(r20,n_bit0)
-PUSH(r20)
-LEA(r20,campo_bits)
-PUSH(r20)
+	LOAD(r20,n_bit0)
+	PUSH(r20)
+	LEA(r20,campo_bits)
+	PUSH(r20)
 
-bsr PoneBitA1
+	bsr PoneBitA1
 
-POP(r20)
-POP(r20)
+	POP(r20)
+	POP(r20)
 
-POP(r1)
-jmp(r1)
+	POP(r1)
+	jmp(r1)
 
 
-TPB5: PUSH(r1)
+	TPB5: PUSH(r1)
 
-LOAD(r20,n_bit0)
-PUSH(r20)
-LEA(r20,campo_bits)
-PUSH(r20)
+	LOAD(r20,n_bit0)
+	PUSH(r20)
+	LEA(r20,campo_bits)
+	PUSH(r20)
 
-bsr PoneBitA1
+	bsr PoneBitA1
 
-POP(r20)
-POP(r20)
+	POP(r20)
+	POP(r20)
 
-LOAD(r20,n_bit7)
-PUSH(r20)
-LEA(r20,campo_bits)
-PUSH(r20)
+	LOAD(r20,n_bit7)
+	PUSH(r20)
+	LEA(r20,campo_bits)
+	PUSH(r20)
 
-bsr PoneBitA1
+	bsr PoneBitA1
 
-POP(r20)
-POP(r20)
+	POP(r20)
+	POP(r20)
 
-POP(r1)
-jmp(r1)
+	POP(r1)
+	jmp(r1)
 
-TPB6: PUSH(r1)
+	TPB6: PUSH(r1)
 
-LOAD(r20,n_bit32)
-PUSH(r20)
-LEA(r20,campo_bits)
-PUSH(r20)
+	LOAD(r20,n_bit32)
+	PUSH(r20)
+	LEA(r20,campo_bits)
+	PUSH(r20)
 
-bsr PoneBitA1
+	bsr PoneBitA1
 
-POP(r20)
-POP(r20)
+	POP(r20)
+	POP(r20)
 
 
-POP(r1)
-jmp(r1)
+	POP(r1)
+	jmp(r1)
 
 
 
-TPB7: PUSH(r1)
+	TPB7: PUSH(r1)
 
-LOAD(r20,n_bit32)
-PUSH(r20)
-LEA(r20,campo_bits)
-PUSH(r20)
+	LOAD(r20,n_bit32)
+	PUSH(r20)
+	LEA(r20,campo_bits)
+	PUSH(r20)
 
-bsr PoneBitA1
+	bsr PoneBitA1
 
-POP(r20)
-POP(r20)
+	POP(r20)
+	POP(r20)
 
-LOAD(r20,n_bit44)
-PUSH(r20)
-LEA(r20,campo_bits)
-PUSH(r20)
+	LOAD(r20,n_bit44)
+	PUSH(r20)
+	LEA(r20,campo_bits)
+	PUSH(r20)
 
-bsr PoneBitA1
+	bsr PoneBitA1
 
-POP(r20)
-POP(r20)
+	POP(r20)
+	POP(r20)
 
-POP(r1)
-jmp(r1)
+	POP(r1)
+	jmp(r1)
 
 
-TPB8: PUSH(r1)
+	TPB8: PUSH(r1)
 
-LOAD(r20,n_bit122)
-PUSH(r20)
-LEA(r20,campo_bits)
-PUSH(r20)
+	LOAD(r20,n_bit122)
+	PUSH(r20)
+	LEA(r20,campo_bits)
+	PUSH(r20)
 
-bsr PoneBitA1
+	bsr PoneBitA1
 
-POP(r20)
-POP(r20)
+	POP(r20)
+	POP(r20)
 
 
-POP(r1)
-jmp(r1)
+	POP(r1)
+	jmp(r1)
 
-TPB9: PUSH(r1)
+	TPB9: PUSH(r1)
 
-LOAD(r20,n_bit32)
-PUSH(r20)
-LEA(r20,campo_bits)
-PUSH(r20)
+	LOAD(r20,n_bit32)
+	PUSH(r20)
+	LEA(r20,campo_bits)
+	PUSH(r20)
 
-bsr PoneBitA1
+	bsr PoneBitA1
 
-POP(r20)
-POP(r20)
+	POP(r20)
+	POP(r20)
 
-LOAD(r20,n_bit44)
-PUSH(r20)
-LEA(r20,campo_bits)
-PUSH(r20)
+	LOAD(r20,n_bit44)
+	PUSH(r20)
+	LEA(r20,campo_bits)
+	PUSH(r20)
 
-bsr PoneBitA1
+	bsr PoneBitA1
 
-POP(r20)
-POP(r20)
+	POP(r20)
+	POP(r20)
 
 
 
-LOAD(r20,n_bit122)
-PUSH(r20)
-LEA(r20,campo_bits)
-PUSH(r20)
+	LOAD(r20,n_bit122)
+	PUSH(r20)
+	LEA(r20,campo_bits)
+	PUSH(r20)
 
-bsr PoneBitA1
+	bsr PoneBitA1
 
-POP(r20)
-POP(r20)
+	POP(r20)
+	POP(r20)
 
-LOAD(r20,n_bit44)
-PUSH(r20)
-LEA(r20,campo_bits)
-PUSH(r20)
+	LOAD(r20,n_bit44)
+	PUSH(r20)
+	LEA(r20,campo_bits)
+	PUSH(r20)
 
-bsr PoneBitA1
+	bsr PoneBitA1
 
-POP(r20)
-POP(r20)
+	POP(r20)
+	POP(r20)
 
 
-POP(r1)
-jmp(r1)
+	POP(r1)
+	jmp(r1)
 
-TLB1:
+	TLB1:
 
-PUSH(r1)
+	PUSH(r1)
 
-LOAD(r20,n_bit0)
-PUSH(r20)
-LEA(r20,campo_bits)
-PUSH(r20)
+	LOAD(r20,n_bit0)
+	PUSH(r20)
+	LEA(r20,campo_bits)
+	PUSH(r20)
 
-bsr PoneBitA1
+	bsr PoneBitA1
 
 
-bsr LeeBit
+	bsr LeeBit
 
-POP(r20)
-POP(r20)
+	POP(r20)
+	POP(r20)
 
 
-POP(r1)
-jmp(r1)
+	POP(r1)
+	jmp(r1)
 
-TLB2:
+	TLB2:
 
-PUSH(r1)
+	PUSH(r1)
 
-LOAD(r20,n_bit0)
-PUSH(r20)
-LEA(r20,campo_bits)
-PUSH(r20)
+	LOAD(r20,n_bit0)
+	PUSH(r20)
+	LEA(r20,campo_bits)
+	PUSH(r20)
 
-bsr PoneBitA1
+	bsr PoneBitA1
 
 
 
-LOAD(r20,n_bit1)
-PUSH(r20)
-LEA(r20,campo_bits)
-PUSH(r20)
+	LOAD(r20,n_bit1)
+	PUSH(r20)
+	LEA(r20,campo_bits)
+	PUSH(r20)
 
-bsr PoneBitA1
+	bsr PoneBitA1
 
 
-LOAD(r20,n_bit4)
-PUSH(r20)
-LEA(r20,campo_bits)
-PUSH(r20)
+	LOAD(r20,n_bit4)
+	PUSH(r20)
+	LEA(r20,campo_bits)
+	PUSH(r20)
 
-bsr PoneBitA1
+	bsr PoneBitA1
 
 
-bsr LeeBit
-addu r28,r28,r29
+	bsr LeeBit
+	addu r28,r28,r29
 
-POP(r20)
-POP(r20)
+	POP(r20)
+	POP(r20)
 
-bsr LeeBit
-addu r28,r28,r29
+	bsr LeeBit
+	addu r28,r28,r29
 
 
-POP(r20)
-POP(r20)
+	POP(r20)
+	POP(r20)
 
-bsr LeeBit
-addu r28,r28,r29
+	bsr LeeBit
+	addu r28,r28,r29
 
 
-POP(r20)
-POP(r20)
+	POP(r20)
+	POP(r20)
 
 
 
 
 
-POP(r1)
-jmp(r1)
+	POP(r1)
+	jmp(r1)
 
 
-TLB3:
+	TLB3:
 
-PUSH(r1)
+	PUSH(r1)
 
-LOAD(r20,n_bit0)
-PUSH(r20)
-LEA(r20,campo_bits)
-PUSH(r20)
+	LOAD(r20,n_bit0)
+	PUSH(r20)
+	LEA(r20,campo_bits)
+	PUSH(r20)
 
-bsr PoneBitA1
+	bsr PoneBitA1
 
 
 
-LOAD(r20,n_bit1)
-PUSH(r20)
-LEA(r20,campo_bits)
-PUSH(r20)
+	LOAD(r20,n_bit1)
+	PUSH(r20)
+	LEA(r20,campo_bits)
+	PUSH(r20)
 
-bsr PoneBitA1
+	bsr PoneBitA1
 
 
-LOAD(r20,n_bit4)
-PUSH(r20)
-LEA(r20,campo_bits)
-PUSH(r20)
+	LOAD(r20,n_bit4)
+	PUSH(r20)
+	LEA(r20,campo_bits)
+	PUSH(r20)
 
-bsr PoneBitA1
+	bsr PoneBitA1
 
 
-bsr LeeBit
-addu r28,r28,r29
+	bsr LeeBit
+	addu r28,r28,r29
 
-POP(r20)
-POP(r20)
+	POP(r20)
+	POP(r20)
 
-bsr LeeBit
-addu r28,r28,r29
+	bsr LeeBit
+	addu r28,r28,r29
 
 
-POP(r20)
-POP(r20)
+	POP(r20)
+	POP(r20)
 
-bsr LeeBit
-addu r28,r28,r29
+	bsr LeeBit
+	addu r28,r28,r29
 
 
-POP(r20)
-POP(r20)
+	POP(r20)
+	POP(r20)
 
-LOAD(r20, n_bit7)
-PUSH(r20)
-LEA(r20, campo_bits)
-PUSH(r20)
+	LOAD(r20, n_bit7)
+	PUSH(r20)
+	LEA(r20, campo_bits)
+	PUSH(r20)
 
-bsr LeeBit
+	bsr LeeBit
 
-and r28, r28, r29
+	and r28, r28, r29
 
-POP(r1)
-jmp(r1)
+	POP(r1)
+	jmp(r1)
 
 
-TLB4:
+	TLB4:
 
-PUSH(r1)
+	PUSH(r1)
 
-LOAD(r20,n_bit0)
-PUSH(r20)
-LEA(r20,campo_bits)
-PUSH(r20)
+	LOAD(r20,n_bit0)
+	PUSH(r20)
+	LEA(r20,campo_bits)
+	PUSH(r20)
 
-bsr PoneBitA1
+	bsr PoneBitA1
 
 
 
-LOAD(r20,n_bit1)
-PUSH(r20)
-LEA(r20,campo_bits)
-PUSH(r20)
+	LOAD(r20,n_bit1)
+	PUSH(r20)
+	LEA(r20,campo_bits)
+	PUSH(r20)
 
-bsr PoneBitA1
+	bsr PoneBitA1
 
 
-LOAD(r20,n_bit2)
-PUSH(r20)
-LEA(r20,campo_bits)
-PUSH(r20)
+	LOAD(r20,n_bit2)
+	PUSH(r20)
+	LEA(r20,campo_bits)
+	PUSH(r20)
 
-bsr PoneBitA1
+	bsr PoneBitA1
 
 
-bsr LeeBit
-addu r28,r28,r29
+	bsr LeeBit
+	addu r28,r28,r29
 
-POP(r20)
-POP(r20)
+	POP(r20)
+	POP(r20)
 
-bsr LeeBit
-addu r28,r28,r29
+	bsr LeeBit
+	addu r28,r28,r29
 
 
-POP(r20)
-POP(r20)
+	POP(r20)
+	POP(r20)
 
-bsr LeeBit
-addu r28,r28,r29
+	bsr LeeBit
+	addu r28,r28,r29
 
 
-POP(r20)
-POP(r20)
+	POP(r20)
+	POP(r20)
 
 
 
 
 
-POP(r1)
-jmp(r1)
+	POP(r1)
+	jmp(r1)
 
 
 
@@ -1719,10 +1728,10 @@ PUSH(r1)
 
 
 
-bsr TCOMPRIME4
+bsr TCOMPRIME3
+
 
 BREAK:
-
 
 
 
