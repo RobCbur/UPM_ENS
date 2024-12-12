@@ -1,0 +1,776 @@
+org 500
+
+palabra_1: data "012345678901234567890123456789\0"
+
+max1:data 10
+
+jj_1: res 4
+ data"/"
+
+org 2000 ;--------------------------MACROS Y SUBRUTINAS---------------------------------
+
+
+
+DBNZ: MACRO (ra,eti)
+    sub ra,ra,1
+    cmp r4,ra,0
+    bb0 2,r4,eti
+ENDMACRO
+
+LEA: MACRO (ra, eti)
+    or ra, r0, low(eti)
+    or.u ra, ra, high(eti)
+ENDMACRO
+
+
+LOAD: MACRO (ra, eti)
+    LEA (ra, eti)
+    ld ra, ra, r0
+ENDMACRO
+
+
+POP: MACRO(ra)
+    ld ra,r30,0
+    st r0 ,r30,r0
+    add r30,r30,4
+ENDMACRO
+
+PUSH: MACRO (ra)
+    sub r30,r30,4
+    st ra,r30,0
+ENDMACRO
+
+
+
+
+
+LongCad:
+
+PUSH(r1)            ; Guarda dirección de retorno
+PUSH(r3)            ; Guarda r3 (contador)
+PUSH(r4)            ; Guarda r4 (registro temporal para comparación)
+PUSH(r11)           ; Guarda r11 (puntero de la cadena)
+PUSH(r12)           ; Guarda r12 (temporal para cargar caracteres)
+PUSH(r31)           ; Guarda marco de pila anterior
+
+xor r4, r4, r4      ; Inicializa r4 a 0 para comparación
+xor r3, r3, r3      ; Inicializa r3 a 0, este será el contador de la longitud
+xor r11, r11, r11   ; Inicializa r11 a 0 (se usará como puntero)
+xor r12, r12, r12   ; Inicializa r12 a 0 para caracteres de la cadena
+
+or r31, r30, 0      ; Guarda el marco actual de pila en r31
+
+ld r11, r31, 24     ; Carga la dirección de inicio de la cadena en r11
+subu r11, r11, 4    ; Desplaza el puntero 4 bytes hacia atrás para iniciar lectura
+subu r3, r3, 4      ; Configura el contador para leer palabras de 4 bytes
+
+
+
+; Bucle para procesar palabras de 4 bytes
+addu r3, r3, 4      ; Incrementa el contador en 4 bytes
+addu r11, r11, 4    ; Mueve el puntero al siguiente bloque de 4 bytes
+ld r12, r11, 0      ; Carga la palabra actual de la cadena en r12
+cmp r4, r12, r0     ; Compara si la palabra contiene un byte nulo
+bb0 12, r4, -4      ; Si no hay byte nulo, sigue a la siguiente palabra
+
+
+subu r3, r3, 1      ; Ajusta el contador para leer los caracteres finales
+subu r11, r11, 1    ; Ajusta el puntero para comenzar el bucle de caracteres
+
+
+; Bucle para procesar caracteres individuales
+addu r3, r3, 1      ; Incrementa el contador
+addu r11, r11, 1    ; Avanza el puntero de un byte
+ld.bu r12, r11, 0   ; Carga un byte de la cadena
+cmp r4, r12, r0     ; Compara el byte con 0
+bb0 2, r4, -4       ; Si encuentra el terminador, sale del bucle
+
+or r29, r3, r0      ; Guarda la longitud calculada en r29
+or r30, r31, r0     ; Restaura el marco de pila
+
+; Restaura los registros y vuelve
+
+POP(r31)
+POP(r12)
+POP(r11)
+POP(r4)
+POP(r3)
+
+POP(r1)
+jmp(r1)
+
+
+
+BuscaCar:
+
+PUSH(r1)            ; Guarda dirección de retorno en la pila
+PUSH(r31)           ; Guarda el marco de pila anterior
+PUSH(r3)            ; Guarda r3 (contador de coincidencias)
+PUSH(r11)           ; Guarda r11 (puntero de la cadena)
+PUSH(r4)            ; Guarda r4 (registro de comparación)
+PUSH(r6)            ; Guarda r6 (registro temporal para tamaño)
+PUSH(r5)            ; Guarda r5 (carácter a buscar)
+PUSH(r12)           ; Guarda r12 (temporal para cargar caracteres)
+PUSH(r7)            ; Guarda r7 (temporal para controlar el final)
+
+; Inicializa los registros necesarios para la búsqueda
+xor r7, r7, r7      ; Inicializa r7 a 0 (usado para comparación de tamaño)
+xor r5, r5, r5      ; Inicializa r5 a 0 (carácter a buscar)
+xor r3, r3, r3      ; Inicializa r3 a 0 (contador de ocurrencias)
+xor r11, r11, r11   ; Inicializa r11 a 0 (puntero de la cadena)
+xor r4, r4, r4      ; Inicializa r4 a 0 (registro temporal para comparación)
+xor r12, r12, r12   ; Inicializa r12 a 0 (registro temporal para el carácter actual)
+
+or r31, r30, 0      ; Guarda el marco actual de pila en r31
+
+ld r5, r31, 36      ; Carga en r5 el carácter a buscar
+ld r11, r31, 40    ; Carga en r11 la dirección de inicio de la cadena
+ld r4, r31, 44      ; Carga en r4 y r3 el from
+ld r3, r31, 44
+ld r7, r31, 48      ; Carga en r7 el to
+
+addu r11, r11, r4   ; Ajusta el puntero r11 para empezar a recorrer la cadena 
+
+
+; Configura r3 y r11 para el inicio de la búsqueda
+subu r11, r11, 1    ; Mueve el puntero r11 una posición hacia atrás
+subu r3, r3, 1      ; Configura el contador en r3
+
+
+; Bucle para recorrer cada carácter de la cadena
+buc: addu r3, r3, 1      ; Incrementa el contador de ocurrencias
+addu r11, r11, 1    ; Avanza el puntero de la cadena
+
+ld.bu r12, r11, 0   ; Carga el carácter actual de la cadena en r12
+
+cmp r4, r7, r3 
+
+bb1 2, r4,fin_nenc
+
+cmp r4, r12, r0     ; Compara r12 con 0 para ver si es el final de la cadena
+
+bb1 2, r4,fin_nenc
+
+cmp r4, r12, r5     ; Compara r12 (carácter actual) con r5 (carácter buscado)
+
+bb0 2, r4, buc
+
+
+or r29, r3, r0      ; Guarda el total de coincidencias en r29
+
+br exit
+
+fin_nenc:
+      
+or r29, r7, r0      ; Guarda el total de coincidencias en r29
+
+exit:
+
+or r30, r31, 0      ; Restaura el marco de pila
+
+; Restaura los registros y vuelve
+POP(r7)
+POP(r12)
+POP(r5)
+POP(r6)
+POP(r4)
+POP(r11)
+POP(r3)
+POP(r31)
+
+POP(r1)
+jmp(r1)
+
+
+
+CoincidenCad:  ;31,32
+
+PUSH(r1)            ; Guarda dirección de retorno
+PUSH(r31)           ; Guarda marco de pila anterior
+PUSH(r3)            ; Guarda r3 (contador)
+PUSH(r11)           ; Guarda r11 (puntero de la primera cadena)
+PUSH(r4)            ; Guarda r4 (registro de comparación)
+PUSH(r12)           ; Guarda r12 (puntero de la segunda cadena)
+PUSH(r21)           ; Guarda r21 (temporal para cargar de la primera cadena)
+PUSH(r22)           ; Guarda r22 (temporal para cargar de la segunda cadena)
+PUSH(r5)            ; Guarda r5 (registro de coincidencias)
+
+
+xor r5, r5, r5      ; Inicializa r5 a 0 (registro de coincidencias)
+xor r3, r3, r3      ; Inicializa r3 a 0 (contador de coincidencias)
+xor r11, r11, r11   ; Inicializa r11 a 0 (puntero de la primera cadena)
+xor r4, r4, r4      ; Inicializa r4 a 0 (comparación)
+xor r12, r12, r12   ; Inicializa r12 a 0 (puntero de la segunda cadena)
+xor r21, r21, r21   ; Inicializa r21 a 0 (temporal de primera cadena)
+xor r22, r22, r22   ; Inicializa r22 a 0 (temporal de segunda cadena)
+
+or r31, r30, 0      ; Guarda el marco actual de pila en r31
+
+ld r11, r31, 40     ; Carga la dirección de la primera cadena en r11
+ld r12, r31, 36     ; Carga la dirección de la segunda cadena en r12
+subu r11, r11, 1    ; Ajusta el puntero de la primera cadena
+subu r12, r12, 1    ; Ajusta el puntero de la segunda cadena
+subu r3, r3, 1      ; Configura el contador
+
+
+; Bucle de comparación de caracteres
+addu r3, r3, 1      ; Incrementa el contador
+addu r12, r12, 1    ; Avanza el puntero de la segunda cadena
+addu r11, r11, 1    ; Avanza el puntero de la primera cadena
+ld.bu r21, r11, 0   ; Carga un byte de la primera cadena en r21
+ld.bu r22, r12, 0   ; Carga un byte de la segunda cadena en r22
+cmp r4, r21, r22    ; Compara los bytes de ambas cadenas
+cmp r5, r21, r0     ; Compara el byte con 0
+bb0 2, r4, 2        ; Si los caracteres no coinciden, termina el bucle
+bb0 2, r5, -8       ; Si se encuentra el fin de cadena, termina el bucle
+
+
+or r29, r3, r0      ; Guarda la cantidad de coincidencias en r29
+or r30, r31, r0     ; Restaura el marco de pila
+
+; Restaura los registros y vuelve
+POP(r5)
+POP(r22)
+POP(r21)
+POP(r12)
+POP(r4)
+POP(r11)
+POP(r3)
+POP(r31)
+
+POP(r1)
+jmp(r1)
+
+
+
+;
+; Debe incorporar este fichero con TODAS sus líneas, sin modificar
+; ninguna de ellas, al final de su archivo CDV24.ens
+;
+; Este aviso se refiere también a las líneas de comentario
+; 
+;
+;; Grupo:    230078 - Mon Oct 28 20:39:49 CET 2024
+
+BuscaMax:
+	PUSH (r1)
+	
+	PUSH (r31)
+
+
+
+
+
+	or   r31, r30, 0
+	or   r28, r0, 0x336B
+	PUSH (r28)
+
+	ld   r10, r31, 8;  REF
+	ld   r11, r31, 12; MAX
+	ld   r12, r31, 16; Dir(JJ)
+
+	sub  r5, r0, 1		; guarda -1 en *JJ por si no se
+	st   r5, r12, 0		; encuentran coincidencias
+
+	addu r27, r0, r0  ; P
+	addu r28, r0, r0  ; L
+
+BucBM:
+	ld.bu r20, r10, r11	; C=REF(max)
+
+				; Reserva registros que
+				; necesita conservar
+	PUSH (r28) 		    	; L
+	PUSH (r11)	    	; MAX
+
+	     		    	; Parámetros de BuscaCar
+	PUSH (r27)	    	; P
+	PUSH (r10)	    	; REF
+	PUSH (r20)	   	; C
+	bsr  BuscaCar
+	POP  (r20)
+	POP  (r10)
+	POP  (r27)
+
+	POP  (r11)		; Recupera registros
+	POP  (r28)	        ; salvaguardados
+
+	cmp  r5, r29, r11	; nuevo P es >= MAX ??
+	bb1  hs, r5, finBM
+	addu r27, r29, r0	; P = nuevo P
+	
+	addu r13, r10, r27	; *REF(P)
+	addu r14, r10, r11 	; *REF(max)	
+
+	PUSH (r11)     		; Reserva registros que
+	PUSH (r10)		; necesita conservar
+	PUSH (r28)
+	PUSH (r27)
+	
+	PUSH (r14)		; Parámetros de CoincidenCad
+	PUSH (r13)
+	bsr  CoincidenCad
+	POP  (r13)
+	POP  (r14)
+	
+	POP  (r27)		; Recupera registros
+	POP  (r28)		; salvaguardados
+	POP  (r10)
+	POP  (r11)
+
+	cmp r5, r29, r28	; Comprueba si longitud > L
+	bb1 le, r5, contBM	; Si no lo es, continúa
+	cmp r5, r29, 255	; Comprueba si longitud > 255
+	bb1 le, r5, noLimBM	; Si no lo es, continúa
+	addu r29, r0, 255	; Si lo es, limita su valor a 255
+	
+noLimBM:
+	addu r28, r29, r0	; actualiza L
+	ld   r12, r31, 16	; Dir(JJ)
+	st   r27, r12, r0	; actualiza P en *JJ
+	bb1 ge, r5, finBM	; Si coincidencia >= 255 termina
+contBM: 
+	addu r27, r27, 1	; Pasa al siguiente carácter
+	cmp  r5, r27, r11	; Es P>=max ?
+	bb1  hs, r5, finBM
+	
+	br   BucBM   		; Nueva búsqueda del primer carácter
+
+finBM:
+	addu r29, r28, r0	; asigna L al valor de retorno r29
+	  
+	or   r27, r0, 0xA7C
+	POP  (r28)
+
+	or   r30, r31, 0
+	POP  (r31)
+	POP  (r1)
+	jmp  (r1)
+;; Grupo:    230078
+
+
+PoneBitA1:
+PUSH(r1)
+
+PUSH(r21)
+PUSH(r20)
+PUSH(r5)
+PUSH(r6)
+PUSH(r7)
+PUSH(r8)
+PUSH(r31)
+
+
+xor r21, r21, r21
+xor r20, r20, r20
+xor r5, r5, r5
+xor r6, r6, r6
+xor r7,r7,r7
+xor r8,r8,r8
+
+or r31, r30, 0
+
+ld r20, r31, 32 ; guarda en r20 dir inicio
+or r21, r0, 7 ; guarda en r21 num 7
+ld r5, r31, 36; guarda en r5 n_bit
+
+
+divu r6 , r5, 8 ;  pon en r6 el byte en l q hay q escribir
+
+ld.bu r7, r20, r6 ; guarda en r7 el byte a escribir
+
+
+mulu r8 , r6, 8
+subu r8, r5, r8 ; guarda en r8 r5 mod 8
+
+sub r8, r21, r8 ; hace 7 - r8 para empezar por la izquierda
+
+
+set r8, r8, 1<5> ; pone un 1 al bit 5 de r8
+set r7, r7 ,r8 ; pone a 1 un campo de bits de longitud 1 y de desplazamiento r8 en r7
+
+st.b r7, r20 , r6 ; guarda el byte cambiado a memoria
+
+
+or r30, r31, 0
+
+POP(r31)
+POP(r8)
+POP(r7)
+POP(r6)
+POP(r5)
+POP(r20)
+POP(r21)
+
+POP(r1)
+jmp(r1)
+
+
+
+
+
+LeeBit:
+PUSH(r1)
+
+PUSH(r21)
+PUSH(r20)
+PUSH(r5)
+PUSH(r6)
+PUSH(r7)
+PUSH(r8)
+PUSH(r31)
+
+
+
+xor r21, r21, r21
+xor r20, r20, r20
+xor r5, r5, r5
+xor r6, r6, r6
+xor r7,r7,r7
+xor r8,r8,r8
+
+or r31, r30, 0
+
+ld r20, r31, 32 ; guarda en r20 dir inicio
+or r21, r0, 7 ; guarda en r21 num 7
+ld r5, r31, 36; guarda en r5 n_bit
+
+
+divu r6 , r5, 8 ;  pon en r6 el byte en l q hay q leer
+
+ld.bu r7, r20, r6 ; guarda en r7 el byte a leer
+
+
+mulu r8 , r6, 8
+subu r8, r5, r8 ; guarda en r8 r5 mod 8
+
+sub r8, r21, r8 ; hace 7 - r8 para empezar por la izquierda
+
+
+set r8, r8, 1<5> ; pone un 1 al bit 5 de r8
+extu r29, r7 ,r8 ; pone a 1 un campo de bits de longitud 1 y de desplazamiento r8 en r7
+
+
+or r30, r31, 0
+
+POP(r31)
+POP(r8)
+POP(r7)
+POP(r6)
+POP(r5)
+POP(r20)
+POP(r21)
+;
+POP(r1)
+jmp(r1)
+;
+;Comprime:
+;
+;
+;
+;
+;PUSH(r1)
+;PUSH(r31)
+;PUSH(r2)
+;PUSH(r3)
+;PUSH(r4)
+;PUSH(r8)
+;PUSH(r9)
+;PUSH(r10)
+;PUSH(r11)
+;PUSH(r12)
+;PUSH(r13)
+;PUSH(r14)
+;PUSH(r17)
+;PUSH(r18)
+;PUSH(r19)
+;PUSH(r20)
+;PUSH(r21)
+;PUSH(r22)
+;PUSH(r23)
+;
+;
+;
+;
+;
+;or r31, r30, 0
+;
+;
+;
+;ld r20,r31,80;texto
+;ld r19, r31,76 ;comprimido
+;xor r9,r9,r9
+;
+;addu r22,r19,5 ; inicio campo de bits
+;
+;PUSH(r20)
+;
+;bsr LongCad
+;
+;POP(r20)
+;or r2,r0,r29
+;;or r3, r0 ,1
+;;st.h r29,r19,0
+;;st.b r3,r19,16
+;
+;bb1 0, r29,2
+;
+;bb0 1,r29,4
+;
+;divu r29,r29,4
+;addu r29,r29,1
+;mulu r29,r29,4
+;
+;subu r30,r30,r29
+;
+;or r10, r30,0 ; pilazona3 
+;or r11, r30,0 ; pilazona3 puntero
+;
+;or r16,r0,0xff
+;
+;st.b r16,r11,r0
+;
+;;subu r30,r30,1
+;
+;xor r12,r12,r12 ; nbit
+;xor r13,r13,r13 ; desplazamiento txt
+;xor r14,r14,r14;nbytes
+;or r8, r0,8
+;
+;
+;BUC_Comp:
+;
+;ld.bu r21,r20,r13 ;cargar caracter
+;st.b r21,r11,r0
+;addu r11,r11,1
+;addu r13,r13,1
+;
+;DBNZ(r8,BUC_Comp)
+;
+;
+;Buc_Main_Comp:
+;
+;;si es mul 8 nbit a 0 y nbyte++
+;bb1 0, r12,5
+;
+;bb1 1,r12,4
+;
+;bb1 2,r12,3
+;
+;xor r12,r12,r12 
+;addu r14,r14,1
+;
+;;llama buscamax
+;LEA(r9,jj_buscamax)
+;
+;
+;
+;
+;PUSH(r5)
+;PUSH(r10)
+;PUSH(r11)
+;PUSH(r12)
+;PUSH(r13)
+;PUSH(r14)
+;PUSH(r27)
+;PUSH(r28)
+;
+;
+;PUSH(r9)
+;
+;PUSH(r13)
+;PUSH(r20)
+;
+;
+;bsr BuscaMax
+;
+;POP(r20)
+;
+;POP(r13)
+;POP(r9)
+;
+;POP(r28)
+;POP(r27)
+;
+;POP(r14)
+;POP(r13)
+;POP(r12)
+;POP(r11)
+;POP(r10)
+;POP(r5)
+;
+;
+;
+;
+;
+;
+;
+;LOAD(r9,jj_buscamax)
+;cmp r4, r9,-1
+;bb1 eq,r4,3
+;
+;cmp r4, r29,4
+;bb0 lo,r4,compresion
+;
+;ld.bu r21,r20,r13 ;cargar caracter
+;st.b r21,r11,r0
+;addu r11,r11,1
+;addu r13,r13,1
+;addu r12,r12,1
+;
+;br fin_compresion
+;
+;compresion:
+;
+;addu r23,r22,r14
+;
+;
+;
+;PUSH(r12)
+;PUSH(r23)
+;
+;
+;bsr PoneBitA1
+;
+;POP(r23)
+;POP(r12)
+;
+;
+;
+;
+;
+;st.h r9,r11,r0
+;addu r11,r11,2
+;st.b r29,r11,r0
+;addu r11,r11,1
+;addu r13,r13,r29
+;addu r12,r12,1
+;
+;fin_compresion:
+;
+;
+;
+;cmp r4,r13,r2
+;
+;
+;bb0 hs,r4,Buc_Main_Comp
+;
+;
+;
+;st.h r2,r19,r0  ;guarda long cad
+;
+;BREAK:
+;
+;or r3,r0,1		;guarda M(1)
+;st.b r3,r19,2
+;
+;cmp r4,r12,r0
+;
+;bb1 eq ,r4 ,2
+;
+;addu r14,r14,1
+;
+;addu r17,r14,5
+;
+;st.b r17,r19,3
+;
+;
+;
+;or r11,r10,0
+;or r18,r17,0
+;
+;
+;ld.b r3,r11,r0
+;st.b r3,r19,r18
+;
+;addu r18,r18,1
+;addu r11,r11,1
+;
+;cmp r4,r11,r31
+;bb0 eq,r4,-5
+;
+;
+;
+;
+;
+;
+;
+;or r30, r31, 0
+;
+;
+;POP(r23)
+;POP(r22)
+;POP(r21)
+;POP(r20)
+;POP(r19)
+;POP(r18)
+;POP(r17)
+;POP(r14)
+;POP(r13)
+;POP(r12)
+;POP(r11)
+;POP(r10)
+;POP(r9)
+;POP(r8)
+;POP(r4)
+;POP(r3)
+;POP(r2)
+;POP(r31)
+;
+;
+;POP(r1)
+;jmp(r1)
+;
+;Descomprime:
+PUSH(r1)
+POP(r1)
+jmp(r1)
+
+Verifica:
+PUSH(r1)
+POP(r1)
+jmp(r1)
+
+
+org 4000
+
+TBUSCAMAX1:
+
+
+
+PUSH(r1) ; 0x10
+
+LEA(r20, jj_1)
+PUSH(r20)
+LOAD(r20,max1)
+PUSH(r20)
+LEA(r20,palabra_1)
+PUSH(r20)
+
+bsr BuscaMax
+
+POP(r20)
+POP(r20)
+POP(r20)
+POP(r1)
+jmp(r1)
+
+
+org 9000
+
+START:
+
+or r30,r0,6000
+
+;PUSH(r1)
+;PUSH(r20)
+
+bsr TBUSCAMAX1
+
+;POP(r20)
+;POP(r1)
+BREAK:
+
+add r16,r16,0xff
+
+LOAD(r10,jj_1)

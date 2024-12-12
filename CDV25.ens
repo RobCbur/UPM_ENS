@@ -97,7 +97,45 @@ to_buscacar4: data 7
 
 res 12
 
+palabra_comp1: data "0123456789\0"
 
+data "////"
+
+comprimido_1: res 32
+
+
+
+palabra_comp2: data "0123456789abcdefghij\0"
+
+res 4 data "////"
+
+
+comprimido_2: res 48
+
+palabra_comp3:data "1234abcd1234abcd2312fghixxxx34ab\0"
+
+data "////////////"
+
+
+
+
+comprimido_3: res 48
+
+
+palabra_comp4: data "tres tristes tigres comen trigo en un trigal el primer tigre que!!\0"
+data "////\0"
+
+comprimido_4: res 96
+
+palabra_comp5: data "0123456789012345678901234567890123456789\0"
+data "////\0"
+
+comprimido_5: res 96
+
+palabra_comp6: data "01234567812345\0"
+data "////\0"
+
+comprimido_6: res 96
 
 
 
@@ -137,7 +175,6 @@ res  28
 
 
 
-
 org 2000 ;--------------------------MACROS Y SUBRUTINAS---------------------------------
 
 
@@ -162,7 +199,7 @@ ENDMACRO
 
 POP: MACRO(ra)
     ld ra,r30,0
-    
+    st r0 ,r30,r0
     add r30,r30,4
 ENDMACRO
 
@@ -385,7 +422,13 @@ jmp(r1)
 
 BuscaMax:
 	PUSH (r1)
+	
 	PUSH (r31)
+
+
+
+
+
 	or   r31, r30, 0
 	or   r28, r0, 0x336B
 	PUSH (r28)
@@ -531,10 +574,7 @@ POP(r1)
 jmp(r1)
 
 
-Comprime:
-PUSH(r1)
-POP(r1)
-jmp(r1)
+
 
 
 LeeBit:
@@ -592,6 +632,286 @@ POP(r21)
 POP(r1)
 jmp(r1)
 
+Comprime:
+
+
+
+
+PUSH(r1)
+PUSH(r31)
+PUSH(r2)
+PUSH(r3)
+PUSH(r4)
+PUSH(r8)
+PUSH(r9)
+PUSH(r10)
+PUSH(r11)
+PUSH(r12)
+PUSH(r13)
+PUSH(r14)
+PUSH(r17)
+PUSH(r18)
+PUSH(r19)
+PUSH(r20)
+PUSH(r21)
+PUSH(r22)
+PUSH(r23)
+PUSH(r24)
+
+
+
+
+or r31, r30, 0
+
+
+
+ld r20,r31,84;texto
+ld r19, r31,80 ;comprimido
+xor r9,r9,r9
+
+addu r22,r19,5 ; inicio campo de bits
+
+PUSH(r20)
+
+bsr LongCad
+
+POP(r20)
+or r2,r0,r29
+;or r3, r0 ,1
+;st.h r29,r19,0
+;st.b r3,r19,16
+
+bb1 0, r29,2
+
+bb0 1,r29,4
+
+divu r29,r29,4
+addu r29,r29,1
+mulu r29,r29,4
+
+subu r30,r30,r29
+
+or r10, r30,0 ; pilazona3 
+or r11, r30,0 ; pilazona3 puntero
+
+subu r30,r30,r29
+
+or r9, r30,0 ; dir(p) var local 
+
+or r16,r0,0xff
+
+st.b r16,r11,r0
+
+;subu r30,r30,1
+
+xor r12,r12,r12 ; nbit
+xor r13,r13,r13 ; desplazamiento txt
+xor r14,r14,r14;nbytes
+or r8, r0,8
+
+
+BUC_Comp:
+
+ld.bu r21,r20,r13 ;cargar caracter
+st.b r21,r11,r0
+addu r11,r11,1
+addu r13,r13,1
+
+DBNZ(r8,BUC_Comp)
+
+
+Buc_Main_Comp:
+
+;si es mul 8 nbit a 0 y nbyte++
+bb1 0, r12,5
+
+bb1 1,r12,4
+
+bb1 2,r12,3
+
+xor r12,r12,r12 
+addu r14,r14,1
+
+;llama buscamax
+
+
+
+
+
+PUSH(r5)
+PUSH(r10)
+PUSH(r11)
+PUSH(r12)
+PUSH(r13)
+PUSH(r14)
+PUSH(r27)
+PUSH(r28)
+PUSH(r24)
+
+;LEA(r9,jj_buscamax)
+
+PUSH(r9)
+
+PUSH(r13)
+PUSH(r20)
+
+
+bsr BuscaMax
+
+POP(r20)
+
+POP(r13)
+POP(r9)
+
+POP(r24)
+
+POP(r28)
+POP(r27)
+
+POP(r14)
+POP(r13)
+POP(r12)
+POP(r11)
+POP(r10)
+POP(r5)
+
+
+
+
+
+
+ld r24,r9,r0
+;LOAD(r9,jj_buscamax)
+cmp r4, r24,-1
+bb1 eq,r4,3
+
+cmp r4, r29,4
+bb0 lo,r4,compresion
+
+ld.bu r21,r20,r13 ;cargar caracter
+st.b r21,r11,r0
+addu r11,r11,1
+addu r13,r13,1
+addu r12,r12,1
+
+br fin_compresion
+
+compresion:
+
+
+
+addu r23,r22,r14
+
+subu r23,r23,1
+
+
+
+PUSH(r12)
+PUSH(r23)
+
+
+bsr PoneBitA1
+
+POP(r23)
+POP(r12)
+
+
+
+
+st.b r24,r11,r0
+addu r11,r11,1
+rot r24,r24,<8>
+st.b r24,r11,r0
+rot r24,r24,<24>
+addu r11,r11,1
+st.b r29,r11,r0
+addu r11,r11,1
+addu r13,r13,r29
+addu r12,r12,1
+
+fin_compresion:
+
+
+
+cmp r4,r13,r2
+
+
+
+
+bb1 lo,r4,Buc_Main_Comp
+
+
+st.h r2,r19,r0  ;guarda long cad
+
+
+
+or r3,r0,1		;guarda M(1)
+st.b r3,r19,2
+
+cmp r4,r12,r0
+
+bb1 eq ,r4 ,2
+
+addu r14,r14,1
+
+addu r17,r14,5
+
+
+
+
+
+st.b r17,r19,3
+
+rot r17,r17,<8>
+st.b r17,r19,4
+rot r17,r17,<24>
+
+
+
+or r11,r10,0
+or r18,r17,0
+
+
+ld.b r3,r11,r0
+st.b r3,r19,r18
+
+addu r18,r18,1
+addu r11,r11,1
+
+cmp r4,r11,r31
+bb0 eq,r4,-5
+
+
+
+
+
+
+
+or r30, r31, 0
+
+POP(r24)
+POP(r23)
+POP(r22)
+POP(r21)
+POP(r20)
+POP(r19)
+POP(r18)
+POP(r17)
+POP(r14)
+POP(r13)
+POP(r12)
+POP(r11)
+POP(r10)
+POP(r9)
+POP(r8)
+POP(r4)
+POP(r3)
+POP(r2)
+POP(r31)
+
+
+POP(r1)
+jmp(r1)
 
 Descomprime:
 PUSH(r1)
@@ -606,7 +926,93 @@ jmp(r1)
 
 
 ; -----------------------------TESTS--------------------------------
-org 4000
+org 10000
+
+
+TCOMPRIME1:PUSH(r1) ; 0x10
+LEA(r20, palabra_comp1)
+PUSH(r20)
+LEA(r20,comprimido_1)
+PUSH(r20)
+
+bsr Comprime
+
+POP(r20)
+POP(r20)
+POP(r1)
+jmp(r1)
+
+TCOMPRIME2:PUSH(r1) ; 0x10
+LEA(r20, palabra_comp2)
+PUSH(r20)
+LEA(r20,comprimido_2)
+PUSH(r20)
+
+bsr Comprime
+
+POP(r20)
+POP(r20)
+POP(r1)
+jmp(r1)
+
+TCOMPRIME3:PUSH(r1) ; 0x10
+LEA(r20, palabra_comp3)
+PUSH(r20)
+LEA(r20,comprimido_3)
+PUSH(r20)
+
+bsr Comprime
+
+POP(r20)
+POP(r20)
+POP(r1)
+jmp(r1)
+
+
+TCOMPRIME4:PUSH(r1) ; 0x10
+LEA(r20, palabra_comp4)
+PUSH(r20)
+LEA(r20,comprimido_4)
+PUSH(r20)
+
+bsr Comprime
+
+POP(r20)
+POP(r20)
+POP(r1)
+jmp(r1)
+
+
+TCOMPRIME5:PUSH(r1) ; 0x10
+LEA(r20, palabra_comp5)
+PUSH(r20)
+LEA(r20,comprimido_5)
+PUSH(r20)
+
+bsr Comprime
+
+POP(r20)
+POP(r20)
+POP(r1)
+jmp(r1)
+
+
+TCOMPRIME6:PUSH(r1) ; 0x10
+LEA(r20, palabra_comp6)
+PUSH(r20)
+LEA(r20,comprimido_6)
+PUSH(r20)
+
+bsr Comprime
+
+POP(r20)
+POP(r20)
+POP(r1)
+jmp(r1)
+
+
+
+
 
 TLONGCA1:PUSH(r1) ; 0x10
 LEA(r20, palabra_loncad1)
@@ -1265,8 +1671,16 @@ org 9000 ;-------------PROGRAMA--------------
 
 START:
 
+
+
 LOAD(r30, r30_inicio)
 
+
+
+
+or r1,r0,1
+or r2,r0,2
+or r3,r0,3
 or r4 ,r0,4
 or r5 ,r0,5
 or r6, r0,6
@@ -1288,7 +1702,16 @@ or r21, r0,21
 or r22, r0,22
 or r23, r0,23
 
-BREAK:
+
+
+
+
+
+
+
+
+
+
 
 PUSH(r20)
 PUSH(r1)
@@ -1296,11 +1719,20 @@ PUSH(r1)
 
 
 
-bsr TLB4
+bsr TCOMPRIME4
+
+BREAK:
+
+
+
 
 
 POP(r1)
+
+
 POP(r20)
+
+
 
 
 
