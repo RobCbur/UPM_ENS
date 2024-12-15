@@ -124,7 +124,7 @@ org 496 ; ------------------------VARIABLES TEST-----------------------------
 
 	res 28
 
-	palabra_comp1: data "0123456789\0"
+	palabra_comp1: data "0123456789\0Z"
 	data "////"
 
 	comprimido_1: res 16
@@ -163,11 +163,11 @@ org 496 ; ------------------------VARIABLES TEST-----------------------------
 
 	decomprimido_3:res 32
 
-	data "////////////////"
-
-
-	palabra_comp4: data "tres tristes tigres comen trigo en un trigal el primer tigre que!!\0"
 	data "////////////"
+
+
+	palabra_comp4: data "tres tristes tigres comen trigo en un trigal, el primer tigre que...\0"
+	data "////////"
 
 	comprimido_4: res 96
 
@@ -693,7 +693,7 @@ org 6000 ;--------------------------MACROS Y SUBRUTINAS-------------------------
 		PUSH(r23)
 		PUSH(r24)
 		PUSH(r26)
-
+		PUSH(r27)
 
 
 		or r31, r30, 0
@@ -701,7 +701,7 @@ org 6000 ;--------------------------MACROS Y SUBRUTINAS-------------------------
 
 
 		ld r20,r31,88;texto
-		ld r19, r31,84 ;comprimido
+		ld r19, r31,92 ;comprimido
 		xor r9,r9,r9
 		xor r26,r26,r26
 		addu r22,r19,5 ; inicio campo de bits
@@ -741,7 +741,7 @@ org 6000 ;--------------------------MACROS Y SUBRUTINAS-------------------------
 		or r8, r0,8
 
 
-		BUC_Comp:
+		BUC_CopiaM:
 
 		ld.bu r21,r20,r13 ;cargar caracter
 		st.b r21,r11,r0
@@ -749,12 +749,16 @@ org 6000 ;--------------------------MACROS Y SUBRUTINAS-------------------------
 		addu r13,r13,1
 		addu r26,r26,1
 
-		DBNZ(r8,BUC_Comp)
+		DBNZ(r8,BUC_CopiaM)
 
-
+	
 		Buc_Main_Comp:
 
 		;si es mul 8 nbit a 0 y nbyte++
+		cmp r4,r12,r0
+
+		bb1 eq , r4, 6
+
 		bb1 0, r12,5
 
 		bb1 1,r12,4
@@ -780,6 +784,7 @@ org 6000 ;--------------------------MACROS Y SUBRUTINAS-------------------------
 		PUSH(r28)
 		PUSH(r24)
 		PUSH(r26)
+		
 
 		;LEA(r9,jj_buscamax)
 
@@ -796,6 +801,8 @@ org 6000 ;--------------------------MACROS Y SUBRUTINAS-------------------------
 		POP(r13)
 		POP(r9)
 
+		
+
 		POP(r26)
 		POP(r24)
 
@@ -808,7 +815,6 @@ org 6000 ;--------------------------MACROS Y SUBRUTINAS-------------------------
 		POP(r11)
 		POP(r10)
 		POP(r5)
-
 
 
 
@@ -837,7 +843,7 @@ org 6000 ;--------------------------MACROS Y SUBRUTINAS-------------------------
 
 		addu r23,r22,r14
 
-		subu r23,r23,1
+		;subu r23,r23,1
 
 
 
@@ -884,17 +890,19 @@ org 6000 ;--------------------------MACROS Y SUBRUTINAS-------------------------
 		or r3,r0,1		;guarda M(1)
 		st.b r3,r19,2
 
-		cmp r4,r12,r0
+		
+
+		cmp r4,r12,r0 ; redondea a la alta n bytes
 
 		bb1 eq ,r4 ,2
 
 		addu r14,r14,1
 
-		addu r17,r14,5
+		addu r17,r14,5 ;suma a long camp bits 5 por la cabecera
 
 
 
-		addu r29,r17,r26
+		addu r29,r17,r26 ; guarda longitud al completo
 
 
 
@@ -902,12 +910,12 @@ org 6000 ;--------------------------MACROS Y SUBRUTINAS-------------------------
 
 		rot r17,r17,<8>
 		st.b r17,r19,4
-		rot r17,r17,<24>
+		rot r17,r17,<24> ;guarda longitud campo de bits + cabecera
 
 
 
-		or r11,r10,0
-		or r18,r17,0
+		or r11,r10,0 ;puntero zona pila 3
+		or r18,r17,0 ;puntero fin campo de bits
 		or r27,r26,r0
 
 		BUC_FIN_COMPRIM:
@@ -929,6 +937,8 @@ org 6000 ;--------------------------MACROS Y SUBRUTINAS-------------------------
 
 
 		or r30, r31, 0
+
+		POP(r27)
 
 		POP(r26)
 
@@ -960,13 +970,30 @@ org 6000 ;--------------------------MACROS Y SUBRUTINAS-------------------------
 		PUSH(r1)
 		PUSH(r31)
 
+		PUSH(r2)
+		PUSH(r4)
+		PUSH(r5)
+		PUSH(r6)
+		PUSH(r7)
+		PUSH(r8)
+		PUSH(r9)
+		PUSH(r10)
+		PUSH(r11)
+		PUSH(r12)
+		PUSH(r13)
+		PUSH(r14)
+		PUSH(r20)
+		PUSH(r21)
+		PUSH(r22)
+		PUSH(r25)		
+
 		or r31, r30, 0
 
 
 		xor r2,r2,r2 ;contador decomprimido
 
-		ld r6,r31,12 ;descomprimido
-		ld r5,r31,8 ;comprimido
+		ld r6,r31,76 ;descomprimido
+		ld r5,r31,72 ;comprimido
 
 		ld.bu r7,r5,2 ;M(1)
 
@@ -1064,12 +1091,171 @@ org 6000 ;--------------------------MACROS Y SUBRUTINAS-------------------------
 		or r29,r2,r0
 		or r30, r31, 0
 
+
+
+		POP(r25)
+		POP(r22)
+		POP(r21)
+		POP(r20)
+		POP(r14)
+		POP(r13)
+		POP(r12)
+		POP(r11)
+		POP(r10)
+		POP(r9)
+		POP(r8)
+		POP(r7)
+		POP(r6)
+		POP(r5)
+		POP(r4)
+		POP(r2)
+
 		POP(r31)
 		POP(r1)
 		jmp(r1)
 
 	Verifica:
 		PUSH(r1)
+		POP(r31)
+
+		PUSH(r4)
+		PUSH(r5)
+		PUSH(r6)
+		PUSH(r7)
+		PUSH(r8)
+		PUSH(r9)
+		PUSH(r10)
+		PUSH(r14)
+
+		or r31,r30,r0
+
+		or r5, r31, 8 ; direccion txt
+		or r6, r31,12 ;direaccopm long 1
+		or r7, r31,16 ; direccion long 2
+
+		PUSH(r5)
+
+		bsr LongCad
+
+		POP(r5)
+
+		
+
+		cmp r4,r29,r0
+
+		bb1 eq ,r4, es_0
+
+		st r29,r6,0
+
+		or r9, r29,r0 ; copia long cad
+		or r14, r29,r0;copia long cad para luego
+		divu r10, r29,8 ; guarda long cad /8
+
+		cmp r4,r9,r0
+
+		
+		bb1 0, r9,  3
+		bb1 1, r9,  2
+		bb0 2, r9,  2
+
+		addu r10,r10,1
+
+		addu r8 , 5,r9 ; sumador de long comprimido
+		addu r8,r10
+
+		bb1 0 , r8,2
+		bb0 1, r8 ,4
+
+		divu r8,r8,4
+		mulu r8,r8,4
+
+		addu r8,r8,1
+
+
+
+	
+		subu r30,r30,r8
+		or r8,r30,r0 ; reserva espacio en la pila para el texto comprimido y lo pone en r8
+
+		bb1 0 , r9,2
+		bb0 1, r9 ,2
+
+		divu r9,r9,4
+		mulu r9,r9,4
+		addu r9,r9,1
+
+		subu r30,r30,r9
+		or r9,r30,r0 ; reserva espacio en la pila para el texto descomprimido y lo pone en r9
+
+
+		PUSH(r8)
+		PUSH(r5)
+
+		bsr Comprime
+
+		POP(r5)
+		POP(r8)
+
+		PUSH(r9)
+		PUSH(r8)
+
+		bsr Descomprime
+
+		POP(r8)
+		POP(r9)
+
+
+		cmp r4, 29,r14
+
+		bb1 eq,r4,2
+		or r29,r0,-1
+		brn final_verifica
+
+		PUSH(r9)
+		PUSH(r5)
+
+		bsr CoincidenCad
+
+		POP(r5)
+		POP(r9)
+
+		cmp r4, r29,r14
+
+		bb1 eq,r4,2
+
+		or r29,r29,-2
+
+		br final_verifica
+
+		or r29,r29,0
+
+		br final_verifica
+
+		es_0:
+		
+		xor r29,r29,r29
+		st r29,r6,0
+		st r29,r7,0
+
+		br final_verifica
+
+		
+
+		final_verifica:
+		or r30,r31,0
+
+
+		POP(r14)
+		POP(r10)
+		POP(r9)
+		POP(r8)
+		POP(r7)
+		POP(r6)
+		POP(r5)
+		POP(r4)
+		
+
+		POP(r31)
 		POP(r1)
 		jmp(r1)
 
@@ -1080,10 +1266,11 @@ org 10000 ; -----------------------------TESTS--------------------------------
 
 
 	TCOMPRIME1:PUSH(r1) ; 0x10
-	LEA(r20, palabra_comp1)
-	PUSH(r20)
 	LEA(r20,comprimido_1)
 	PUSH(r20)
+	LEA(r20, palabra_comp1)
+	PUSH(r20)
+	
 
 	bsr Comprime
 
@@ -1093,11 +1280,11 @@ org 10000 ; -----------------------------TESTS--------------------------------
 	jmp(r1)
 
 	TCOMPRIME2:PUSH(r1) ; 0x10
-	LEA(r20, palabra_comp2)
-	PUSH(r20)
 	LEA(r20,comprimido_2)
 	PUSH(r20)
-
+	LEA(r20, palabra_comp2)
+	PUSH(r20)
+	
 	bsr Comprime
 
 	POP(r20)
@@ -1106,9 +1293,9 @@ org 10000 ; -----------------------------TESTS--------------------------------
 	jmp(r1)
 
 	TCOMPRIME3:PUSH(r1) ; 0x10
-	LEA(r20, palabra_comp3)
+		LEA(r20,comprimido_3)
 	PUSH(r20)
-	LEA(r20,comprimido_3)
+	LEA(r20, palabra_comp3)
 	PUSH(r20)
 
 	bsr Comprime
@@ -1120,10 +1307,11 @@ org 10000 ; -----------------------------TESTS--------------------------------
 
 
 	TCOMPRIME4:PUSH(r1) ; 0x10
-	LEA(r20, palabra_comp4)
-	PUSH(r20)
 	LEA(r20,comprimido_4)
 	PUSH(r20)
+	LEA(r20, palabra_comp4)
+	PUSH(r20)
+	
 
 	bsr Comprime
 
@@ -1134,9 +1322,10 @@ org 10000 ; -----------------------------TESTS--------------------------------
 
 
 	TCOMPRIME5:PUSH(r1) ; 0x10
-	LEA(r20, palabra_comp5)
+		LEA(r20,comprimido_5)
 	PUSH(r20)
-	LEA(r20,comprimido_5)
+
+	LEA(r20, palabra_comp5)
 	PUSH(r20)
 
 	bsr Comprime
@@ -1148,9 +1337,10 @@ org 10000 ; -----------------------------TESTS--------------------------------
 
 
 	TCOMPRIME6:PUSH(r1) ; 0x10
-	LEA(r20, palabra_comp6)
-	PUSH(r20)
 	LEA(r20,comprimido_6)
+	PUSH(r20)
+
+	LEA(r20, palabra_comp6)
 	PUSH(r20)
 
 	bsr Comprime
@@ -1819,11 +2009,12 @@ org 10000 ; -----------------------------TESTS--------------------------------
 
 
 	TCOMPRIME_DESCOMPRIME1:PUSH(r1) ; 0x10
+		LEA(r20,comprimido_1)
+		PUSH(r20)
 	
         LEA(r20, palabra_comp1)
 		PUSH(r20)
-		LEA(r20,comprimido_1)
-		PUSH(r20)
+	
 
 		bsr Comprime
 
@@ -1848,16 +2039,20 @@ org 10000 ; -----------------------------TESTS--------------------------------
 
 
 	TCOMPRIME_DES2:PUSH(r1) ; 0x10
-	
-        LEA(r20, palabra_comp2)
-		PUSH(r20)
+
 		LEA(r20,comprimido_2)
 		PUSH(r20)
 
+	
+        LEA(r20, palabra_comp2)
+		PUSH(r20)
+	
 		bsr Comprime
 
 		POP(r20)
 		POP(r20)
+
+		
 
 		LEA(r20,decomprimido_2)
 		PUSH(r20)
@@ -1868,7 +2063,7 @@ org 10000 ; -----------------------------TESTS--------------------------------
 
 		POP(r20)
 		POP(r20)
-
+	
 
 
 	POP(r1)
@@ -1879,12 +2074,14 @@ org 10000 ; -----------------------------TESTS--------------------------------
 
 
 	TCOMPRIME_DES3:PUSH(r1) ; 0x10
-	
-        LEA(r20, palabra_comp3)
-		PUSH(r20)
+
 		LEA(r20,comprimido_3)
 		PUSH(r20)
 
+	
+        LEA(r20, palabra_comp3)
+		PUSH(r20)
+		
 		bsr Comprime
 
 		POP(r20)
@@ -1911,10 +2108,13 @@ org 10000 ; -----------------------------TESTS--------------------------------
 
 	TCOMPRIME_DES4:PUSH(r1) ; 0x10
 	
-        LEA(r20, palabra_comp4)
-		PUSH(r20)
 		LEA(r20,comprimido_4)
 		PUSH(r20)
+
+
+        LEA(r20, palabra_comp4)
+		PUSH(r20)
+		
 
 		bsr Comprime
 
@@ -1942,10 +2142,12 @@ org 10000 ; -----------------------------TESTS--------------------------------
 
 	TCOMPRIME_DES5:PUSH(r1) ; 0x10
 	
-        LEA(r20, palabra_comp5)
-		PUSH(r20)
 		LEA(r20,comprimido_5)
 		PUSH(r20)
+
+        LEA(r20, palabra_comp5)
+		PUSH(r20)
+		
 
 		bsr Comprime
 
@@ -1972,11 +2174,11 @@ org 10000 ; -----------------------------TESTS--------------------------------
 
 
 	TCOMPRIME_DES6:PUSH(r1) ; 0x10
-	
-        LEA(r20, palabra_comp6)
-		PUSH(r20)
 		LEA(r20,comprimido_6)
 		PUSH(r20)
+        LEA(r20, palabra_comp6)
+		PUSH(r20)
+		
 
 		bsr Comprime
 
@@ -2044,6 +2246,12 @@ org 20000 ;-------------PROGRAMA--------------
 	or r21, r0,21
 	or r22, r0,22
 	or r23, r0,23
+	or r24 ,r0,24
+	or r25, r0,25
+	or r26, r0,26
+	or r27, r0,27
+	or r28, r0,28
+
 
 
 
@@ -2059,12 +2267,13 @@ org 20000 ;-------------PROGRAMA--------------
 	PUSH(r20)
 	PUSH(r1)
 
+	;BREAK:
 
 
-	bsr TCOMPRIME_DES4
+	bsr TCOMPRIME_DES2
 
+	;BREAK:
 
-BREAK:
 
 
 	POP(r1)
