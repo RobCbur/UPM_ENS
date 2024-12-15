@@ -197,9 +197,17 @@ org 496 ; ------------------------VARIABLES TEST-----------------------------
 
 	data"////////////////"
 
+	long_1_verifica: res 4
 
+	data "////"
+
+	long_2_verifica: res 4
+
+		palabra_comp7: data "01234567890123456789012345678901234567890123456789012345678901234567890123456789\0"
 	
+	palabra_comp8: data "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef\0"
 
+	palabra_comp9:data 0x04030201 data 0x08070605 data 0x06050403 data 0x03080706 data 0x03020504 data 0x04030201 data 0x08070605 data 0x06050403 
 
 
 	
@@ -919,7 +927,7 @@ org 6000 ;--------------------------MACROS Y SUBRUTINAS-------------------------
 		or r27,r26,r0
 
 		BUC_FIN_COMPRIM:
-		ld.b r3,r11,r0
+		ld.bu r3,r11,r0
 		st.b r3,r19,r18
 
 		addu r18,r18,1
@@ -1021,6 +1029,8 @@ org 6000 ;--------------------------MACROS Y SUBRUTINAS-------------------------
 		addu r11,r11,1
 		addu r2,r2,1
 
+		
+
 		DBNZ(r12,BUC_DEComp)
 
 		addu r12,r5,5 ;dir mapa bit
@@ -1049,11 +1059,11 @@ org 6000 ;--------------------------MACROS Y SUBRUTINAS-------------------------
 		decomprime:
 
 
-		ld.b r20,r11,1
+		ld.bu r20,r11,1
 		rot r20,r20,<24>
-		ld.b r20,r11,0  ;inicio de la subcadena a copiar
+		ld.bu r20,r11,0  ;inicio de la subcadena a copiar
 
-		ld.b r21, r11,2 ;longitud subcadena
+		ld.bu r21, r11,2 ;longitud subcadena
 
 		addu r22, r6,r20 ; puntero de la subcadena
 
@@ -1116,7 +1126,7 @@ org 6000 ;--------------------------MACROS Y SUBRUTINAS-------------------------
 
 	Verifica:
 		PUSH(r1)
-		POP(r31)
+		PUSH(r31)
 
 		PUSH(r4)
 		PUSH(r5)
@@ -1128,10 +1138,10 @@ org 6000 ;--------------------------MACROS Y SUBRUTINAS-------------------------
 		PUSH(r14)
 
 		or r31,r30,r0
-
-		or r5, r31, 8 ; direccion txt
-		or r6, r31,12 ;direaccopm long 1
-		or r7, r31,16 ; direccion long 2
+	
+		ld r5, r31, 40 ; direccion txt
+		ld r6, r31,44 ;direaccopm long 1
+		ld r7, r31,48 ; direccion long 2
 
 		PUSH(r5)
 
@@ -1148,54 +1158,76 @@ org 6000 ;--------------------------MACROS Y SUBRUTINAS-------------------------
 		st r29,r6,0
 
 		or r9, r29,r0 ; copia long cad
+		addu r9,r9,1 ; el terminador
 		or r14, r29,r0;copia long cad para luego
-		divu r10, r29,8 ; guarda long cad /8
+		divu r10, r9,4 ; guarda long cad /8
 
-		cmp r4,r9,r0
 
 		
-		bb1 0, r9,  3
-		bb1 1, r9,  2
-		bb0 2, r9,  2
+		bb1 0, r9,  2
+		bb0 1, r9,  2
+		
 
 		addu r10,r10,1
+		mulu r10,r10,4
+	
+		subu r9,r9,1 ; el terminador
+		addu r8 , r9,5; sumador de long comprimido
+		;addu r8,r8,r10
+		subu r11,r9,8 ;nbytes-8(nbits campo)
+		divu r12,r11,8; nbytes del campo
 
-		addu r8 , 5,r9 ; sumador de long comprimido
-		addu r8,r10
+		bb1 0, r11,3
+		bb1 1, r11,2
+		bb0 2, r11,2
 
-		bb1 0 , r8,2
-		bb0 1, r8 ,4
+		addu r12,r12,1
+	
 
-		divu r8,r8,4
-		mulu r8,r8,4
+		addu r8,r8,r12 ;5 bytes cabecera + bytes campo + bytes palabra
 
-		addu r8,r8,1
 
 
 
 	
-		subu r30,r30,r8
+		divu r13, r8,4
+		bb1 0,r8,2
+		bb0 1,r8,2
+		;mulu r8,r8,
+		addu r13,r13,1
+
+		mulu r13,r13,4
+		subu r30,r30,r13
 		or r8,r30,r0 ; reserva espacio en la pila para el texto comprimido y lo pone en r8
+	
+		
 
-		bb1 0 , r9,2
-		bb0 1, r9 ,2
+		;bb1 0 , r9,2
+		;bb0 1, r9 ,2
+		
+		;divu r9,r9,4
+		;mulu r9,r9,4
+		;addu r9,r9,4
+		
+		subu r30,r30,r10
 
-		divu r9,r9,4
-		mulu r9,r9,4
-		addu r9,r9,1
-
-		subu r30,r30,r9
+		
 		or r9,r30,r0 ; reserva espacio en la pila para el texto descomprimido y lo pone en r9
 
 
+		
 		PUSH(r8)
 		PUSH(r5)
 
 		bsr Comprime
 
+
 		POP(r5)
 		POP(r8)
 
+		
+
+	
 		PUSH(r9)
 		PUSH(r8)
 
@@ -1203,13 +1235,15 @@ org 6000 ;--------------------------MACROS Y SUBRUTINAS-------------------------
 
 		POP(r8)
 		POP(r9)
+		
 
 
-		cmp r4, 29,r14
 
-		bb1 eq,r4,2
-		or r29,r0,-1
-		brn final_verifica
+		cmp r4,r29,r14
+
+		bb1 eq,r4,3
+		subu r29,r0,1
+		bsr final_verifica
 
 		PUSH(r9)
 		PUSH(r5)
@@ -1221,13 +1255,13 @@ org 6000 ;--------------------------MACROS Y SUBRUTINAS-------------------------
 
 		cmp r4, r29,r14
 
-		bb1 eq,r4,2
+		bb1 eq,r4,3
 
-		or r29,r29,-2
+		subu r29,r0,2
 
 		br final_verifica
 
-		or r29,r29,0
+		or r29,r0,0
 
 		br final_verifica
 
@@ -2267,15 +2301,25 @@ org 20000 ;-------------PROGRAMA--------------
 	PUSH(r20)
 	PUSH(r1)
 
-	;BREAK:
+
+	LEA(r20,long_2_verifica)
+	PUSH(r20)
+		
+	LEA(r20,long_1_verifica)
+	PUSH(r20)
+		
+	LEA(r20,palabra_comp9)
+	PUSH(r20)
+	
 
 
-	bsr TCOMPRIME_DES2
+	bsr Verifica
 
-	;BREAK:
+	POP(r20)
+	POP(r20)
+	POP(r20)
 
-
-
+	 
 	POP(r1)
 
 
