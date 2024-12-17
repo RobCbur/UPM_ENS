@@ -250,7 +250,7 @@ org 6000 ;--------------------------MACROS Y SUBRUTINAS-------------------------
 
 	POP: MACRO(ra)
 	    ld ra,r30,0
-	    st r0 ,r30,r0
+	 ;   st r0 ,r30,r0
 	    add r30,r30,4
 	ENDMACRO
 
@@ -1009,7 +1009,7 @@ org 6000 ;--------------------------MACROS Y SUBRUTINAS-------------------------
 		PUSH(r21)
 		PUSH(r22)
 		PUSH(r25)		
-		BREAK:
+		
 
 		or r31, r30, 0
 
@@ -2336,14 +2336,14 @@ org 20000 ;-------------PROGRAMA--------------
 	LEA(r20,long_1_verifica)
 	PUSH(r20)
 		
-	LEA(r20,palabra_comp4)
+	LEA(r20,palabra_comp2)
 	PUSH(r20)
 	
 
 	bsr Verifica
 
 	
-
+BREAK:
 
 	POP(r20)
 	POP(r20)
