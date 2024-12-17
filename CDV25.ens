@@ -895,10 +895,20 @@ org 6000 ;--------------------------MACROS Y SUBRUTINAS-------------------------
 
 
 		bb1 lo,r4,Buc_Main_Comp
+		
+
+		
 
 
-		st.h r2,r19,r0  ;guarda long cad
+		 ;guarda long cad
 
+		st.b r2,r19,0
+
+		rot r2,r2,<8>
+
+		st.b r2,r19,1
+
+		rot r2,r2,<24>
 
 
 		or r3,r0,1		;guarda M(1)
@@ -999,6 +1009,7 @@ org 6000 ;--------------------------MACROS Y SUBRUTINAS-------------------------
 		PUSH(r21)
 		PUSH(r22)
 		PUSH(r25)		
+		BREAK:
 
 		or r31, r30, 0
 
@@ -1014,8 +1025,13 @@ org 6000 ;--------------------------MACROS Y SUBRUTINAS-------------------------
 		ld.bu r8,r5,4
 		rot r8,r8,<24>
 		ld.bu r8,r5,3 ;cabecera + mapabits
-		ld.h r9,r5,0 ;long cad decomp
 
+		
+
+		ld.bu r9,r5,1 ;long cad decomp
+		rot r9,r9,<24>
+		ld.bu r10,r5,0;long cad decomp
+		or r9,r10,r9
 
 		subu r25,r8,5 ;longitud mapabits(temporal)
 		mulu r25,r25,8
@@ -2320,13 +2336,13 @@ org 20000 ;-------------PROGRAMA--------------
 	LEA(r20,long_1_verifica)
 	PUSH(r20)
 		
-	LEA(r20,palabra_comp11)
+	LEA(r20,palabra_comp4)
 	PUSH(r20)
 	
 
 	bsr Verifica
 
-	BREAK:
+	
 
 
 	POP(r20)
