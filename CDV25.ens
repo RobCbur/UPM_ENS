@@ -1,3 +1,5 @@
+
+org 85808 data "----------------"data "----------------"data "----------------"data "----------------"data "----------------"data "----------------"data "----------------"data "----------------"data "----------------"data "----------------"data "----------------"data "----------------"data "----------------"data "----------------"data "----------------"data "----------------"data "----------------"data "----------------"
 org 496 ; ------------------------VARIABLES TEST-----------------------------
 
 	n_bit0: data 0
@@ -207,12 +209,18 @@ org 496 ; ------------------------VARIABLES TEST-----------------------------
 	
 	palabra_comp8: data "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef\0"
 
-	palabra_comp9:data 0x04030201 data 0x08070605 data 0x06050403 data 0x03080706 data 0x03020504 data 0x04030201 data 0x08070605 data 0x06050403 
-
-
-	
+	palabra_comp9:data 0x04030201 data 0x08070605 data 0x06050403 data 0x03080706 data 0x03020504 data 0x04030201 data 0x08070605 data 0x06050403 res 12
 
 	
+
+		;palabra_comp10: data "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\0"
+
+	
+		palabra_comp10: data "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\0"
+
+	
+		palabra_comp11:data 0x0201FFFE data 0x02FE01FF data 0xFFFE02FE data 0xFFFE02FE data 0xFFFE02FE data 0x02FE01FF data 0x0201FFFE data 0xFFFE02FE data 0x01FFFA01 res 8
+
 
 org 4000 
 	res 16
@@ -725,19 +733,18 @@ org 6000 ;--------------------------MACROS Y SUBRUTINAS-------------------------
 		;st.b r3,r19,16
 
 		bb1 0, r29,2
-
 		bb0 1,r29,4
 
 		divu r29,r29,4
 		addu r29,r29,1
 		mulu r29,r29,4
 
-		subu r30,r30,r29
+		subu r30,r30,r29 ; reserva en pila espacio para texto descomprimido long cad(aprox 4)
 
 		or r10, r30,0 ; pilazona3 
 		or r11, r30,0 ; pilazona3 puntero
 
-		subu r30,r30,r29
+		subu r30,r30,4
 
 		or r9, r30,0 ; dir(p) var local 
 
@@ -761,19 +768,17 @@ org 6000 ;--------------------------MACROS Y SUBRUTINAS-------------------------
 
 	
 		Buc_Main_Comp:
-
-		;si es mul 8 nbit a 0 y nbyte++
-		cmp r4,r12,r0
-
-		bb1 eq , r4, 6
-
+			xor r0,r0,r0
+		;si es mul 8 pin byte a 0 y nbyte++
+		
+		;cmp r4,r12,r0
+		;bb1 eq , r4, 6
 		bb1 0, r12,5
-
 		bb1 1,r12,4
-
 		bb1 2,r12,3
 
-		xor r12,r12,r12 
+		st.b r0,r22,r14
+		;xor r12,r12,r12 
 		addu r14,r14,1
 
 		;llama buscamax
@@ -849,31 +854,32 @@ org 6000 ;--------------------------MACROS Y SUBRUTINAS-------------------------
 
 
 
-		addu r23,r22,r14
+		;addu r23,r22,r14
 
 		;subu r23,r23,1
 
 
 
 		PUSH(r12)
-		PUSH(r23)
+		PUSH(r22)
 
 
 		bsr PoneBitA1
 
-		POP(r23)
+		POP(r22)
 		POP(r12)
 
 
+	
 
 
 		st.b r24,r11,r0
 		addu r11,r11,1
-		rot r24,r24,<8>
+		rot r24,r24,<8> 
 		st.b r24,r11,r0
-		rot r24,r24,<24>
+		rot r24,r24,<24> ;copia P
 		addu r11,r11,1
-		st.b r29,r11,r0
+		st.b r29,r11,r0 ; copia L
 		addu r11,r11,1
 		addu r13,r13,r29
 		addu r12,r12,1
@@ -899,12 +905,11 @@ org 6000 ;--------------------------MACROS Y SUBRUTINAS-------------------------
 		st.b r3,r19,2
 
 		
+		;extu r12,r12,3<0>
+		;cmp r4,r12,r0 ; redondea a la alta n bytes
+		;bb1 eq ,r4 ,2
 
-		cmp r4,r12,r0 ; redondea a la alta n bytes
-
-		bb1 eq ,r4 ,2
-
-		addu r14,r14,1
+		;addu r14,r14,1
 
 		addu r17,r14,5 ;suma a long camp bits 5 por la cabecera
 
@@ -1022,7 +1027,7 @@ org 6000 ;--------------------------MACROS Y SUBRUTINAS-------------------------
 		addu r11,r11,r8
 
 		BUC_DEComp:
-
+		
 		ld.bu r13,r11,0
 		st.b r13,r10,0
 		addu r10,r10,1
@@ -1095,7 +1100,6 @@ org 6000 ;--------------------------MACROS Y SUBRUTINAS-------------------------
 			
 		bb1 lo,r4,Buc_Main_DEComp
 
-	
 
 		st.b r0,r10,0
 		or r29,r2,r0
@@ -1136,12 +1140,15 @@ org 6000 ;--------------------------MACROS Y SUBRUTINAS-------------------------
 		PUSH(r9)
 		PUSH(r10)
 		PUSH(r14)
+		PUSH(r11)
+		PUSH(r12)
+		PUSH(r13)
 
 		or r31,r30,r0
 	
-		ld r5, r31, 40 ; direccion txt
-		ld r6, r31,44 ;direaccopm long 1
-		ld r7, r31,48 ; direccion long 2
+		ld r5, r31, 52 ; direccion txt
+		ld r6, r31,56 ;direaccopm long 1
+		ld r7, r31,60 ; direccion long 2
 
 		PUSH(r5)
 
@@ -1163,7 +1170,7 @@ org 6000 ;--------------------------MACROS Y SUBRUTINAS-------------------------
 		divu r10, r9,4 ; guarda long cad /8
 
 
-		
+			
 		bb1 0, r9,  2
 		bb0 1, r9,  2
 		
@@ -1215,12 +1222,14 @@ org 6000 ;--------------------------MACROS Y SUBRUTINAS-------------------------
 		or r9,r30,r0 ; reserva espacio en la pila para el texto descomprimido y lo pone en r9
 
 
-		
+	
+				
 		PUSH(r8)
 		PUSH(r5)
 
-		bsr Comprime
 
+		bsr Comprime
+	
 
 		POP(r5)
 		POP(r8)
@@ -1231,7 +1240,11 @@ org 6000 ;--------------------------MACROS Y SUBRUTINAS-------------------------
 		PUSH(r9)
 		PUSH(r8)
 
+
 		bsr Descomprime
+
+
+
 
 		POP(r8)
 		POP(r9)
@@ -1252,6 +1265,7 @@ org 6000 ;--------------------------MACROS Y SUBRUTINAS-------------------------
 
 		POP(r5)
 		POP(r9)
+		
 
 		cmp r4, r29,r14
 
@@ -1278,7 +1292,9 @@ org 6000 ;--------------------------MACROS Y SUBRUTINAS-------------------------
 		final_verifica:
 		or r30,r31,0
 
-
+		POP(r13)
+		POP(r12)
+		POP(r11)
 		POP(r14)
 		POP(r10)
 		POP(r9)
@@ -1295,7 +1311,7 @@ org 6000 ;--------------------------MACROS Y SUBRUTINAS-------------------------
 
 
 
-org 10000 ; -----------------------------TESTS--------------------------------
+org 15000 ; -----------------------------TESTS--------------------------------
 
 
 
@@ -2294,10 +2310,6 @@ org 20000 ;-------------PROGRAMA--------------
 
 
 
-
-
-
-
 	PUSH(r20)
 	PUSH(r1)
 
@@ -2308,17 +2320,20 @@ org 20000 ;-------------PROGRAMA--------------
 	LEA(r20,long_1_verifica)
 	PUSH(r20)
 		
-	LEA(r20,palabra_comp9)
+	LEA(r20,palabra_comp11)
 	PUSH(r20)
 	
 
-
 	bsr Verifica
 
+	BREAK:
+
+
 	POP(r20)
 	POP(r20)
 	POP(r20)
 
+;bsr TCOMPRIME4
 	 
 	POP(r1)
 
