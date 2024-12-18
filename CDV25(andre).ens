@@ -1,4 +1,6 @@
 
+
+
 ;org 85808 data "----------------"data "----------------"data "----------------"data "----------------"data "----------------"data "----------------"data "----------------"data "----------------"data "----------------"data "----------------"data "----------------"data "----------------"data "----------------"data "----------------"data "----------------"data "----------------"data "----------------"data "----------------"
 org 496 ; ------------------------VARIABLES TEST-----------------------------
 
@@ -216,7 +218,7 @@ org 496 ; ------------------------VARIABLES TEST-----------------------------
 		;palabra_comp10: data "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\0"
 
 	
-		palabra_comp10: data "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\0"
+		palabra_comp10: data "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\0"
 
 	
 		palabra_comp11:data 0x0201FFFE data 0x02FE01FF data 0xFFFE02FE data 0xFFFE02FE data 0xFFFE02FE data 0x02FE01FF data 0x0201FFFE data 0xFFFE02FE data 0x01FFFA01 res 8
@@ -713,26 +715,6 @@ org 6000 ;--------------------------MACROS Y SUBRUTINAS-------------------------
 		PUSH(r26)
 		PUSH(r27)
 
-		xor r2,r2, r2
-		xor r3,r3 ,r3
-		xor r4,r4 ,r4
-		xor r8,r8, r8
-		xor r9,r9 ,r9
-		xor r10,r10, r10
-		xor r11,r11, r11
-		xor r12,r12, r12
-		xor r13,r13, r13
-		xor r14,r14, r14
-		xor r17,r17, r17
-		xor r18,r18, r18
-		xor r19,r19, r19
-		xor r20,r20, r20
-		xor r21,r21, r21
-		xor r22,r22, r22
-		xor r23,r23, r23
-		xor r24,r24, r24
-		xor r26,r26, r26
-		xor r27,r27, r27
 
 		or r31, r30, 0
 
@@ -1009,182 +991,164 @@ org 6000 ;--------------------------MACROS Y SUBRUTINAS-------------------------
 
 
 		POP(r1)
-		jmp(r1)
-
-	Descomprime:
-		PUSH(r1)
-		PUSH(r31)
-
-		PUSH(r2)
-		PUSH(r4)
-		PUSH(r5)
-		PUSH(r6)
-		PUSH(r7)
-		PUSH(r8)
-		PUSH(r9)
-		PUSH(r10)
-		PUSH(r11)
-		PUSH(r12)
-		PUSH(r13)
-		PUSH(r14)
-		PUSH(r20)
-		PUSH(r21)
-		PUSH(r22)
-		PUSH(r25)		
-		
-		xor r2,r2,r2
-		
-		
-		xor r4,r4 ,r4
-		xor r5,r5 ,r5
-		xor r6,r6 ,r6
-		xor r7,r7 ,r7
-		xor r8,r8 ,r8
-		xor r9,r9 ,r9
-		xor r10,r10 ,r10
-		xor r11,r11 ,r11
-		xor r12,r12 ,r12
-		xor r13,r13 ,r13
-		xor r14,r14 ,r14
-		xor r20,r20 ,r20
-		xor r21,r21 ,r21
-		xor r22,r22 ,r22
-		xor r25,r25 ,r25
-
-
-		or r31, r30, 0
-
-
-		xor r2,r2,r2 ;contador decomprimido
-
-		ld r6,r31,76 ;descomprimido
-		ld r5,r31,72 ;comprimido
-
-		ld.bu r7,r5,2 ;M(1)
-
-
-		ld.bu r8,r5,4
-		rot r8,r8,<24>
-		ld.bu r8,r5,3 ;cabecera + mapabits
-
-		
-BREAK:
-		ld.bu r9,r5,1 ;long cad decomp
-		rot r9,r9,<24>
-		ld.bu r10,r5,0;long cad decomp
-		or r9,r10,r9
-
-		subu r25,r8,5 ;longitud mapabits(temporal)
-		mulu r25,r25,8
-
-		mulu r12,r7,8
-
-		or r10,r6,r0 ;puntero descomprimido
-		or r11,r5,r0 ;puntero comprimido(texto)
-		addu r11,r11,r8
-
-		BUC_DEComp:
-		
-		ld.bu r13,r11,0
-		st.b r13,r10,0
-		addu r10,r10,1
-		addu r11,r11,1
-		addu r2,r2,1
-
-		
-
-		DBNZ(r12,BUC_DEComp)
-
-		addu r12,r5,5 ;dir mapa bit
-		xor r14,r14,r14;n bit a mirar
-
-		Buc_Main_DEComp:
-
-		PUSH(r14)
-		PUSH(r12)
-
-		bsr LeeBit
-
-		POP(r12)
-		POP(r14)
-
-		bb1 0,r29,decomprime
-
-		ld.bu r13,r11,0
-		st.b r13,r10,0
-		addu r10,r10,1
-		addu r11,r11,1
-		addu r2,r2,1
-		addu r14,r14,1
-
-		br decomprime_fin
-		decomprime:
-
-
-		ld.bu r20,r11,1
-		rot r20,r20,<24>
-		ld.bu r20,r11,0  ;inicio de la subcadena a copiar
-
-		ld.bu r21, r11,2 ;longitud subcadena
-
-		addu r22, r6,r20 ; puntero de la subcadena
-
-
-		BUC_COPIARCOMP:
-
-		ld.bu r13,r22,0
-		st.b r13,r10,0
-		addu r22,r22,1
-		addu r10,r10,1
-		addu r2,r2,1
-
-
-		DBNZ(r21,BUC_COPIARCOMP)
-
-		;or r13,r0,0xaf
-		;ld.bu r13,r11,0
-		;st.b r13,r10,0
-		;addu r10,r10,1
-		addu r11,r11,3
-		;addu r2,r2,1
-		addu r14,r14,1
-
-		decomprime_fin:
-
-
-	
-		cmp r4, r2, r9
-			
-		bb1 lo,r4,Buc_Main_DEComp
-
-
-		st.b r0,r10,0
-		or r29,r2,r0
-		or r30, r31, 0
-
-
-
-		POP(r25)
-		POP(r22)
-		POP(r21)
-		POP(r20)
-		POP(r14)
-		POP(r13)
-		POP(r12)
-		POP(r11)
-		POP(r10)
-		POP(r9)
-		POP(r8)
-		POP(r7)
-		POP(r6)
-		POP(r5)
-		POP(r4)
-		POP(r2)
-
-		POP(r31)
-		POP(r1)
-		jmp(r1)
-
+	    jmp(r1)
+;
+;	;Descomprime:
+;    
+;		PUSH(r1)
+;		PUSH(r31)
+;
+;		PUSH(r2)
+;		PUSH(r4)
+;		PUSH(r5)
+;		PUSH(r6)
+;		PUSH(r7)
+;		PUSH(r8)
+;		PUSH(r9)
+;		PUSH(r10)
+;		PUSH(r11)
+;		PUSH(r12)
+;		PUSH(r13)
+;		PUSH(r14)
+;		PUSH(r20)
+;		PUSH(r21)
+;		PUSH(r22)
+;		PUSH(r25)		
+;		
+;
+;		or r31, r30, 0
+;
+;
+;		xor r2,r2,r2 ;contador decomprimido
+;
+;		ld r6,r31,76 ;descomprimido
+;		ld r5,r31,72 ;comprimido
+;
+;		ld.bu r7,r5,2 ;M(1)
+;
+;
+;		ld.bu r8,r5,4
+;		rot r8,r8,<24>
+;		ld.bu r8,r5,3 ;cabecera + mapabits
+;
+;		
+;
+;		ld.bu r9,r5,1 ;long cad decomp
+;		rot r9,r9,<24>
+;		ld.bu r10,r5,0;long cad decomp
+;		or r9,r10,r9
+;
+;		subu r25,r8,5 ;longitud mapabits(temporal)
+;		mulu r25,r25,8
+;
+;		mulu r12,r7,8
+;
+;		or r10,r6,r0 ;puntero descomprimido
+;		or r11,r5,r0 ;puntero comprimido(texto)
+;		addu r11,r11,r8
+;
+;		BUC_DEComp:
+;		
+;		ld.bu r13,r11,0
+;		st.b r13,r10,0
+;		addu r10,r10,1
+;		addu r11,r11,1
+;		addu r2,r2,1
+;
+;		
+;
+;		DBNZ(r12,BUC_DEComp)
+;
+;		addu r12,r5,5 ;dir mapa bit
+;		xor r14,r14,r14;n bit a mirar
+;
+;		Buc_Main_DEComp:
+;
+;		PUSH(r14)
+;		PUSH(r12)
+;
+;		bsr LeeBit
+;
+;		POP(r12)
+;		POP(r14)
+;
+;		bb1 0,r29,decomprime
+;
+;		ld.bu r13,r11,0
+;		st.b r13,r10,0
+;		addu r10,r10,1
+;		addu r11,r11,1
+;		addu r2,r2,1
+;		addu r14,r14,1
+;
+;		br decomprime_fin
+;		decomprime:
+;
+;
+;		ld.bu r20,r11,1
+;		rot r20,r20,<24>
+;		ld.bu r20,r11,0  ;inicio de la subcadena a copiar
+;
+;		ld.bu r21, r11,2 ;longitud subcadena
+;
+;		addu r22, r6,r20 ; puntero de la subcadena
+;
+;
+;		BUC_COPIARCOMP:
+;
+;		ld.bu r13,r22,0
+;		st.b r13,r10,0
+;		addu r22,r22,1
+;		addu r10,r10,1
+;		addu r2,r2,1
+;
+;
+;		DBNZ(r21,BUC_COPIARCOMP)
+;
+;		;or r13,r0,0xaf
+;		;ld.bu r13,r11,0
+;		;st.b r13,r10,0
+;		;addu r10,r10,1
+;		addu r11,r11,3
+;		;addu r2,r2,1
+;		addu r14,r14,1
+;
+;		decomprime_fin:
+;
+;
+;	
+;		cmp r4, r2, r9
+;			
+;		bb1 lo,r4,Buc_Main_DEComp
+;
+;
+;		st.b r0,r10,0
+;		or r29,r2,r0
+;		or r30, r31, 0
+;
+;
+;
+;		POP(r25)
+;		POP(r22)
+;		POP(r21)
+;		POP(r20)
+;		POP(r14)
+;		POP(r13)
+;		POP(r12)
+;		POP(r11)
+;		POP(r10)
+;		POP(r9)
+;		POP(r8)
+;		POP(r7)
+;		POP(r6)
+;		POP(r5)
+;		POP(r4)
+;		POP(r2)
+;
+;		POP(r31)
+;		POP(r1)
+;		jmp(r1)
+;
 	Verifica:
 		PUSH(r1)
 		PUSH(r31)
@@ -1279,7 +1243,7 @@ BREAK:
 		or r9,r30,r0 ; reserva espacio en la pila para el texto descomprimido y lo pone en r9
 
 
-	
+
 				
 		PUSH(r8)
 		PUSH(r5)
@@ -1293,7 +1257,21 @@ BREAK:
 
 		
 
-	
+	PUSH(r1)
+		PUSH(r31)
+
+		PUSH(r4)
+		PUSH(r5)
+		PUSH(r6)
+		PUSH(r7)
+		PUSH(r8)
+		PUSH(r9)
+		PUSH(r10)
+		PUSH(r14)
+		PUSH(r11)
+		PUSH(r12)
+		PUSH(r13)
+
 		PUSH(r9)
 		PUSH(r8)
 
@@ -1306,9 +1284,23 @@ BREAK:
 		POP(r8)
 		POP(r9)
 		
+	POP(r13)
+		POP(r12)
+		POP(r11)
+		POP(r14)
+		POP(r10)
+		POP(r9)
+		POP(r8)
+		POP(r7)
+		POP(r6)
+		POP(r5)
+		POP(r4)
+		
 
+		POP(r31)
+		POP(r1)
 
-		st r29,r7,0
+        st r29,r7,0
 		cmp r4,r29,r14
 
 		bb1 eq,r4,3
@@ -1365,6 +1357,90 @@ BREAK:
 		POP(r31)
 		POP(r1)
 		jmp(r1)
+
+
+Descomprime: 	PUSH (r1)			; Guardamos la dirección de retorno
+				PUSH (r31)			; y el valor anterior del puntero de marco de pila
+				or r31, r30, r30	; Inicializamos puntero de marco de pila
+				ld r8, r31, 8		; Dirección del texto a descomprimir (cab)
+				ld r9, r31, 12		; Dirección de la zona donde se debe dejar
+									; el texto descomprimido
+				or r29, r0, r0		; Inicializamos contador de longitud del texto
+				ld.bu r20, r8, 0	; Cargamos en r10 la longitud del texto
+				ld.bu r10, r8, 1
+				mak r10, r10, 8<8>
+				or r10, r20, r10
+				;subu r10, r10, 1	; Y le restamos 1 para mas adelante determinar la posicion 
+									; en la que hay que saltar a FINDescomprime
+				ld.bu r20, r8, 3	; Calculamos la direccion de la zona 3 en r21
+				ld.bu r21, r8, 4
+				mak r21, r21, 8<8>
+				or r21, r20, r21
+				addu r21, r21, r8
+				
+				addu r23, r8, 5		; Dirección del mapa de bits
+				or r24, r0, r0		; Desplazamiento para recorrer desc
+				or r25, r0, r0		; Desplazamiento para recorrer mapa de bits
+				or r26, r0, r0		; Desplazamiento para recorrer com
+				
+BUCinicial:		ld.bu r6, r21, r26 		; Copia de com a desc 8 caracteres iniciales
+				st.b r6, r9, r24
+				addu r24, r24, 1
+				addu r26, r26, 1
+				cmp r7, r26, 8
+				bb1 eq, r7, BUCbytes
+				br BUCinicial
+				
+BUCbytes:		cmp r7, r24, r10			; Comprueba si se ha llegado al final del texto
+				bb1 eq, r7, FINDescomprime
+				PUSH(r29)					; Reservamos registros
+				PUSH(r25)					; Parametros de LeeBit
+				PUSH(r23)
+				bsr LeeBit
+				or r5, r29, r29
+				addu r30, r30, 8
+				POP(r29)
+				
+				addu r25, r25, 1
+				cmp r7, r5, 0				; ¿El bit es 0? 
+				bb0 eq, r7, Descomprimir 	; Si no es 0, salta a descomprimir
+				ld.bu r6, r21, r26			; Si es 0, copia el caracter siguiente
+				st.b r6, r9, r24
+				addu r24, r24, 1			; Incrementa punteros
+				addu r26, r26, 1
+				addu r29, r29, 1
+				br BUCbytes
+				
+Descomprimir:	ld.bu r27, r21, r26			; Cargamos en r27 la posicion de la referencia
+				addu r26, r26, 1			
+				ld.bu r6, r21, r26
+				mak r6, r6, 8<8>
+				or r27, r27, r6
+				addu r26, r26, 1
+				
+				ld.bu r22, r21, r26			; Cargamos en r22 la longitud de la 												; subcadena
+				addu r26, r26, 1
+				or r28, r0, r0				; Contador bytes a copiar
+				
+BUCdescomprimir: 	cmp r7, r28, r22		; Comprueba si ya hemos terminado de copiar los 													; bytes comprimidos
+					bb1 eq, r7, BUCbytes
+					ld.bu r6, r9, r27
+					st.b r6, r9, r24		
+					addu r27, r27, 1		; Incrementa punteros
+					addu r28, r28, 1
+					addu r29, r29, 1
+					addu r24, r24, 1
+					bsr BUCdescomprimir
+					
+FINDescomprime:	addu r29, r24, 0			; Devuelve el tamaño de la cadena descomprimida
+				st.b r0, r9, r24			; Añade "\0" al final de desc
+				or r30, r31, r31			
+				POP(r31)
+				POP(r1)
+				jmp(r1)
+
+
+
 
 
 
@@ -2377,13 +2453,13 @@ org 20000 ;-------------PROGRAMA--------------
 	LEA(r20,long_1_verifica)
 	PUSH(r20)
 		
-	LEA(r20,palabra_comp10)
+	LEA(r20,palabra_comp2)
 	PUSH(r20)
 	
-
+	
 	bsr Verifica
-
-	;BREAK:
+BREAK:
+	
 
 
 	POP(r20)
